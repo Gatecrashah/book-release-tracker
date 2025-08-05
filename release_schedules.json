@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T13:53:45.982041",
-      "last_checked": "2025-08-05T14:10:57.346417",
+      "last_checked": "2025-08-05T14:33:15.283770",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -23,11 +23,11 @@
       "id": "james_s_the_faith_of_2026",
       "title": "The Faith of Beasts",
       "author": "James S. A. Corey",
-      "release_date": "2026-01-01",
+      "release_date": "2026-04-14",
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:10:47.339960",
-      "last_checked": "2025-08-05T14:10:47.339963",
+      "last_checked": "2025-08-05T14:33:15.283782",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -47,7 +47,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:10:47.340168",
-      "last_checked": "2025-08-05T14:10:47.340171",
+      "last_checked": "2025-08-05T14:33:15.283789",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -58,7 +58,87 @@
         "source": "faq_simple",
         "confidence": "medium"
       }
+    },
+    {
+      "id": "brandon_sanderson_tailored_realities_2025",
+      "title": "Tailored Realities",
+      "author": "Brandon Sanderson",
+      "release_date": "2025-12-09",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
+      "discovery_date": "2025-08-05T14:33:07.139522",
+      "last_checked": "2025-08-05T14:33:07.139533",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:33:15.552803"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "stephen_hunter_the_gun_man_2025",
+      "title": "The Gun Man Jackson Swagger",
+      "author": "Stephen Hunter",
+      "release_date": "2025-10-14",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/stephen-hunter",
+      "discovery_date": "2025-08-05T14:33:08.868646",
+      "last_checked": "2025-08-05T14:33:08.868656",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:33:15.552812"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "jack_carr_cry_havoc_2025",
+      "title": "Cry Havoc",
+      "author": "Jack Carr",
+      "release_date": "2025-10-07",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/jack-carr",
+      "discovery_date": "2025-08-05T14:33:11.584664",
+      "last_checked": "2025-08-05T14:33:11.584674",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:33:15.552814"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "jeffrey_archer_end_game_2025",
+      "title": "End Game",
+      "author": "Jeffrey Archer",
+      "release_date": "2025-09-23",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
+      "discovery_date": "2025-08-05T14:33:15.283319",
+      "last_checked": "2025-08-05T14:33:15.283328",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:33:15.552816"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
     }
   ],
-  "last_updated": "2025-08-05T14:10:57.968421"
+  "last_updated": "2025-08-05T14:33:15.702335"
 }
