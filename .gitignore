@@ -46,7 +46,6 @@ ehthumbs.db
 Thumbs.db
 
 # Project specific
-release_schedules.json
 *.log
 test_*.txt
 
