@@ -16,6 +16,7 @@ def test_author_scraping(author_name, author_id):
     
     scraper = BookNotificationScraper()
     
+    
     author_config = {
         'name': author_name,
         'book_notification_id': author_id
@@ -48,6 +49,7 @@ def main():
     test_authors = [
         ("James S. A. Corey", "james-s-a-corey"),
         ("Brandon Sanderson", "brandon-sanderson"),
+        ("Lee Child", "lee-child"),
     ]
     
     for author_name, author_id in test_authors:

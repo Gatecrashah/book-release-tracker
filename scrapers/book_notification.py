@@ -48,24 +48,55 @@ class BookNotificationScraper(BaseBookScraper):
             # Look for FAQ sections with upcoming book information
             books = []
             
-            # Look for text containing the pattern "has a new book coming out"
-            coming_out_texts = soup.find_all(string=lambda text: text and "has a new book coming out" in text)
+            # Look for FAQ patterns with upcoming book information
+            self._extract_single_book_pattern(soup, books, author_name, author_url)
+            self._extract_multiple_books_pattern(soup, books, author_name, author_url)
             
-            if coming_out_texts:
-                for text in coming_out_texts:
-                    # The text is cut off, so get the parent element's full text
-                    if hasattr(text, 'parent') and text.parent:
-                        parent_text = text.parent.get_text()
+            # Filter for future releases only
+            future_books = [book for book in books if self._is_future_date(book.get('release_date'))]
+            
+            return future_books
+            
+        except Exception as e:
+            logger.error(f"Error scraping releases for {author_name}: {e}")
+            return []
+    
+    def _extract_single_book_pattern(self, soup, books: List[Dict], author_name: str, author_url: str):
+        """Extract single book pattern: 'Author has a new book coming out on DATE called TITLE'"""
+        
+        # Look for text containing the pattern "has a new book coming out"
+        coming_out_texts = soup.find_all(string=lambda text: text and "has a new book coming out" in text)
+        
+        if coming_out_texts:
+            for text in coming_out_texts:
+                # The text is cut off, so get the parent element's full text
+                if hasattr(text, 'parent') and text.parent:
+                    parent_text = text.parent.get_text()
+                    
+                    # First try the complete pattern
+                    pattern = r'(.+?)\s+has a new book coming out on\s+([^c]+?)called\s+(.+?)(?:\.|$)'
+                    matches = re.search(pattern, parent_text, re.IGNORECASE)
+                    
+                    if matches:
+                        extracted_author, date_str, title = matches.groups()
+                        parsed_date = self.parse_release_date(date_str.strip())
                         
-                        # Try to extract book title and date from full parent text
-                        import re
-                        
-                        # First try the complete pattern
-                        pattern = r'(.+?)\s+has a new book coming out on\s+([^c]+?)called\s+(.+?)(?:\.|$)'
-                        matches = re.search(pattern, parent_text, re.IGNORECASE)
-                        
-                        if matches:
-                            extracted_author, date_str, title = matches.groups()
+                        if parsed_date and title.strip():
+                            book = self.normalize_book_data({
+                                'title': title.strip(),
+                                'author': author_name,
+                                'release_date': parsed_date,
+                                'source_url': author_url,
+                                'metadata': {'source': 'faq', 'confidence': 'high'}
+                            })
+                            books.append(book)
+                            logger.info(f"Found upcoming book: {title.strip()} - {parsed_date}")
+                    else:
+                        # Try a simpler pattern
+                        simple_pattern = r'has a new book coming out on\s+(.+?)\s+called\s+(.+?)(?:\.|$)'
+                        simple_matches = re.search(simple_pattern, parent_text, re.IGNORECASE)
+                        if simple_matches:
+                            date_str, title = simple_matches.groups()
                             parsed_date = self.parse_release_date(date_str.strip())
                             
                             if parsed_date and title.strip():
@@ -78,33 +109,43 @@ class BookNotificationScraper(BaseBookScraper):
                                 })
                                 books.append(book)
                                 logger.info(f"Found upcoming book: {title.strip()} - {parsed_date}")
-                        else:
-                            # Try a simpler pattern
-                            simple_pattern = r'has a new book coming out on\s+(.+?)\s+called\s+(.+?)(?:\.|$)'
-                            simple_matches = re.search(simple_pattern, parent_text, re.IGNORECASE)
-                            if simple_matches:
-                                date_str, title = simple_matches.groups()
-                                parsed_date = self.parse_release_date(date_str.strip())
-                                
-                                if parsed_date and title.strip():
-                                    book = self.normalize_book_data({
-                                        'title': title.strip(),
-                                        'author': author_name,
-                                        'release_date': parsed_date,
-                                        'source_url': author_url,
-                                        'metadata': {'source': 'faq', 'confidence': 'high'}
-                                    })
-                                    books.append(book)
-                                    logger.info(f"Found upcoming book: {title.strip()} - {parsed_date}")
-            
-            # Filter for future releases only
-            future_books = [book for book in books if self._is_future_date(book.get('release_date'))]
-            
-            return future_books
-            
-        except Exception as e:
-            logger.error(f"Error scraping releases for {author_name}: {e}")
-            return []
+    
+    def _extract_multiple_books_pattern(self, soup, books: List[Dict], author_name: str, author_url: str):
+        """Extract multiple books pattern: 'Author has X new books coming out: TITLE1 will be released on DATE1. TITLE2 will be released on DATE2.'"""
+        
+        # Look for text containing multiple books pattern
+        multiple_books_texts = soup.find_all(string=lambda text: text and re.search(r'has.*books? coming out', text, re.IGNORECASE))
+        
+        if multiple_books_texts:
+            for text in multiple_books_texts:
+                if hasattr(text, 'parent') and text.parent:
+                    parent_text = text.parent.get_text()
+                    
+                    # Pattern for individual book releases: "TITLE will be released on DATE"
+                    book_pattern = r'([^.]+?)\s+will be released on\s+([^.]+?)(?:\.|$)'
+                    book_matches = re.findall(book_pattern, parent_text, re.IGNORECASE)
+                    
+                    for title_match, date_match in book_matches:
+                        title = title_match.strip()
+                        date_str = date_match.strip()
+                        
+                        # Clean up the title - remove common prefix patterns
+                        title = re.sub(r'^(and\s+)?', '', title, flags=re.IGNORECASE).strip()
+                        title = re.sub(r'^.*?has.*?books?\s+coming\s+out:\s*', '', title, flags=re.IGNORECASE).strip()
+                        title = re.sub(r'^.*?new\s+books?\s+coming\s+out:\s*', '', title, flags=re.IGNORECASE).strip()
+                        
+                        parsed_date = self.parse_release_date(date_str)
+                        
+                        if parsed_date and title and len(title) > 3:  # Basic validation
+                            book = self.normalize_book_data({
+                                'title': title,
+                                'author': author_name,
+                                'release_date': parsed_date,
+                                'source_url': author_url,
+                                'metadata': {'source': 'faq_multiple', 'confidence': 'high'}
+                            })
+                            books.append(book)
+                            logger.info(f"Found upcoming book (multiple pattern): {title} - {parsed_date}")
     
     def parse_release_date(self, date_str: str) -> Optional[date]:
         """
