@@ -1,0 +1,30 @@
+authors:
+  - name: "Brandon Sanderson"
+    book_notification_id: "brandon-sanderson"
+    goodreads_backup: "https://www.goodreads.com/author/show/38550.Brandon_Sanderson"
+    status: "active"
+    
+  - name: "Stephen Hunter" 
+    book_notification_id: "stephen-hunter"
+    goodreads_backup: "https://www.goodreads.com/author/show/1151.Stephen_Hunter"
+    status: "active"
+    
+  - name: "James S. A. Corey"
+    book_notification_id: "james-s-a-corey"
+    goodreads_backup: "https://www.goodreads.com/author/show/4192148.James_S_A_Corey"
+    status: "active"
+    
+  - name: "Jack Carr"
+    book_notification_id: "jack-carr"
+    goodreads_backup: "https://www.goodreads.com/author/show/17130093.Jack_Carr"
+    status: "active"
+    
+  - name: "Lee Child"
+    book_notification_id: "lee-child"
+    goodreads_backup: "https://www.goodreads.com/author/show/7582.Lee_Child"
+    status: "active"
+    
+  - name: "Jeffrey Archer"
+    book_notification_id: "jeffrey-archer"
+    goodreads_backup: "https://www.goodreads.com/author/show/3345.Jeffrey_Archer"
+    status: "active"

@@ -1,0 +1,73 @@
+name: Book Release Monitor
+
+on:
+  schedule:
+    # Run every Sunday at 9:00 AM UTC (weekly monitoring)
+    - cron: '0 9 * * 0'
+  
+  workflow_dispatch:
+    # Allow manual triggering
+    
+  push:
+    branches: [ main ]
+    paths:
+      - 'book_monitor.py'
+      - 'authors.yaml'
+      - 'scrapers/**'
+      - '.github/workflows/book_monitor.yml'
+
+jobs:
+  monitor-releases:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        # Fetch full history to maintain release_schedules.json
+        fetch-depth: 0
+    
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: "0.5.14"
+        
+    - name: Set up Python
+      run: uv python install 3.11
+        
+    - name: Install dependencies
+      run: uv sync
+        
+    - name: Run book release monitoring
+      env:
+        RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        EMAIL_TO: ${{ secrets.EMAIL_TO }}
+      run: |
+        uv run python book_monitor.py
+        
+    - name: Commit updated release schedules
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Check if there are changes to commit
+        if [ -n "$(git status --porcelain)" ]; then
+          git add release_schedules.json
+          git commit -m "📚 Update release schedules - $(date -u +"%Y-%m-%d %H:%M UTC")
+          
+          🤖 Generated with Book Release Tracker
+          
+          Co-Authored-By: GitHub Actions <noreply@github.com>" || echo "No changes to commit"
+          
+          git push
+        else
+          echo "No changes detected in release schedules"
+        fi
+        
+    - name: Upload monitoring logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: monitoring-logs
+        path: book_monitor.log
+        retention-days: 30
