@@ -1,4 +1,105 @@
 {
-  "books": [],
-  "last_updated": "2025-08-05T14:15:00.000000"
+  "books": [
+    {
+      "id": "brandon_sanderson_tailored_realities_2025",
+      "title": "Tailored Realities",
+      "author": "Brandon Sanderson",
+      "release_date": "2025-12-09",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
+      "discovery_date": "2025-08-05T14:40:08.490882",
+      "last_checked": "2025-08-05T14:40:08.490893",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:40:17.486227"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "stephen_hunter_the_gun_man_2025",
+      "title": "The Gun Man Jackson Swagger",
+      "author": "Stephen Hunter",
+      "release_date": "2025-10-14",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/stephen-hunter",
+      "discovery_date": "2025-08-05T14:40:10.096245",
+      "last_checked": "2025-08-05T14:40:10.096254",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:40:17.486237"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "james_s_the_faith_of_2026",
+      "title": "The Faith of Beasts",
+      "author": "James S. A. Corey",
+      "release_date": "2026-04-14",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
+      "discovery_date": "2025-08-05T14:40:11.598205",
+      "last_checked": "2025-08-05T14:40:11.598213",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:40:17.486240"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "jack_carr_cry_havoc_2025",
+      "title": "Cry Havoc",
+      "author": "Jack Carr",
+      "release_date": "2025-10-07",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/jack-carr",
+      "discovery_date": "2025-08-05T14:40:12.986939",
+      "last_checked": "2025-08-05T14:40:12.986948",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:40:17.486242"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "jeffrey_archer_end_game_2025",
+      "title": "End Game",
+      "author": "Jeffrey Archer",
+      "release_date": "2025-09-23",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
+      "discovery_date": "2025-08-05T14:40:17.047328",
+      "last_checked": "2025-08-05T14:40:17.047339",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:40:17.486244"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    }
+  ],
+  "last_updated": "2025-08-05T14:40:17.486265"
 }
