@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T13:53:45.982041",
-      "last_checked": "2025-08-05T13:53:45.982043",
+      "last_checked": "2025-08-05T14:10:57.346417",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -18,7 +18,47 @@
       "metadata": {
         "table_source": true
       }
+    },
+    {
+      "id": "james_s_the_faith_of_2026",
+      "title": "The Faith of Beasts",
+      "author": "James S. A. Corey",
+      "release_date": "2026-01-01",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
+      "discovery_date": "2025-08-05T14:10:47.339960",
+      "last_checked": "2025-08-05T14:10:47.339963",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:10:57.968381"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "james_s_corey_has_a_2026",
+      "title": "Corey has a new book",
+      "author": "James S. A. Corey",
+      "release_date": "2026-01-01",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
+      "discovery_date": "2025-08-05T14:10:47.340168",
+      "last_checked": "2025-08-05T14:10:47.340171",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:10:57.968393"
+        }
+      ],
+      "metadata": {
+        "source": "faq_simple",
+        "confidence": "medium"
+      }
     }
   ],
-  "last_updated": "2025-08-05T13:53:51.926141"
+  "last_updated": "2025-08-05T14:10:57.968421"
 }
