@@ -16,6 +16,9 @@ on:
       - 'scrapers/**'
       - '.github/workflows/book_monitor.yml'
 
+permissions:
+  contents: write
+
 jobs:
   monitor-releases:
     runs-on: ubuntu-latest
