@@ -47,13 +47,18 @@ class BookNotificationScraper(BaseBookScraper):
             
             books = []
             
-            # Try to extract JSON-LD data first
+            # Try FAQ section first (most authoritative for upcoming releases)
+            faq_books = self._extract_books_from_faq(soup, author_name, author_url)
+            books.extend(faq_books)
+            
+            # Try to extract JSON-LD data
             json_ld_books = self._extract_books_from_json_ld(soup, author_name)
             books.extend(json_ld_books)
             
-            # Supplement with HTML parsing for upcoming releases
-            html_books = self._extract_books_from_html(soup, author_name, author_url)
-            books.extend(html_books)
+            # Supplement with HTML parsing for upcoming releases (only if no FAQ data found)
+            if not faq_books:
+                html_books = self._extract_books_from_html(soup, author_name, author_url)
+                books.extend(html_books)
             
             # Remove duplicates based on book ID
             unique_books = self._deduplicate_books(books)
@@ -99,6 +104,71 @@ class BookNotificationScraper(BaseBookScraper):
                         
         except Exception as e:
             logger.debug(f"Error extracting JSON-LD books: {e}")
+            
+        return books
+    
+    def _extract_books_from_faq(self, soup, author_name: str, source_url: str) -> List[Dict]:
+        """Extract upcoming book information from FAQ sections."""
+        books = []
+        
+        try:
+            # Look for FAQ sections
+            faq_sections = soup.find_all(['div', 'section'], class_=re.compile(r'faq|question', re.I))
+            if not faq_sections:
+                # Try finding by text content
+                faq_sections = soup.find_all(string=re.compile(r'Will there be.*more books', re.I))
+                if faq_sections:
+                    # Get parent elements
+                    faq_sections = [elem.parent for elem in faq_sections if elem.parent]
+            
+            for section in faq_sections:
+                # Look for upcoming book information in FAQ text
+                text_content = section.get_text() if section else ""
+                
+                # Pattern to match: "Author has a new book coming out on DATE called TITLE"
+                book_pattern = r'(?:has a|will have a|is releasing a).*?new book.*?(?:coming out|releasing|published).*?on\s+([A-Za-z]+ \d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}).*?called\s+([^.]+)'
+                matches = re.findall(book_pattern, text_content, re.IGNORECASE | re.DOTALL)
+                
+                for date_str, title in matches:
+                    release_date = self.parse_release_date(date_str.strip())
+                    clean_title = self.clean_text(title.strip())
+                    
+                    # Validate the extracted data
+                    if clean_title and len(clean_title) > 2 and release_date:
+                        book = self.normalize_book_data({
+                            'title': clean_title,
+                            'author': author_name,
+                            'release_date': release_date,
+                            'source_url': source_url,
+                            'metadata': {'source': 'faq', 'confidence': 'high'}
+                        })
+                        books.append(book)
+                        logger.info(f"Found upcoming book in FAQ: {clean_title} - {release_date}")
+                
+                # Also look for simpler patterns
+                simple_pattern = r'([^.!?]+(?:book|novel|story)[^.!?]*)\s+(?:in|on)\s+([A-Za-z]+ \d{4}|[A-Za-z]+ \d{1,2}(?:st|nd|rd|th)?,?\s+\d{4})'
+                simple_matches = re.findall(simple_pattern, text_content, re.IGNORECASE)
+                
+                for title_phrase, date_str in simple_matches:
+                    # Extract actual title from phrase
+                    title_match = re.search(r'"([^"]+)"|\'([^\']+)\'|([A-Z][^,.!?]*(?:book|novel|story))', title_phrase, re.IGNORECASE)
+                    if title_match:
+                        clean_title = self.clean_text(title_match.group(1) or title_match.group(2) or title_match.group(3))
+                        release_date = self.parse_release_date(date_str.strip())
+                        
+                        if clean_title and len(clean_title) > 2 and release_date:
+                            book = self.normalize_book_data({
+                                'title': clean_title,
+                                'author': author_name,
+                                'release_date': release_date,
+                                'source_url': source_url,
+                                'metadata': {'source': 'faq_simple', 'confidence': 'medium'}
+                            })
+                            books.append(book)
+                            logger.info(f"Found upcoming book in FAQ (simple): {clean_title} - {release_date}")
+                            
+        except Exception as e:
+            logger.debug(f"Error extracting FAQ books: {e}")
             
         return books
     
@@ -214,7 +284,7 @@ class BookNotificationScraper(BaseBookScraper):
             return None
     
     def _parse_book_table(self, table, author_name: str, source_url: str) -> List[Dict]:
-        """Parse books from HTML table."""
+        """Parse books from HTML table with improved validation."""
         books = []
         
         try:
@@ -225,33 +295,97 @@ class BookNotificationScraper(BaseBookScraper):
                 if len(cells) < 2:
                     continue
                 
-                # Assume first cell is title, look for date in other cells
-                title = self.clean_text(cells[0].get_text())
-                if not title:
+                # Get potential title from first cell
+                title_text = self.clean_text(cells[0].get_text())
+                if not title_text:
                     continue
                 
+                # Validate title - reject obvious non-titles
+                if self._is_invalid_title(title_text):
+                    continue
+                
+                # Look for release date in other cells
                 release_date = None
+                date_confidence = 'low'
+                
                 for cell in cells[1:]:
                     date_text = self.clean_text(cell.get_text())
                     parsed_date = self.parse_release_date(date_text)
                     if parsed_date:
-                        release_date = parsed_date
-                        break
+                        # Prefer more specific dates over year-only
+                        if len(date_text) > 4:  # More than just year
+                            release_date = parsed_date
+                            date_confidence = 'medium'
+                            break
+                        elif not release_date:  # Only use year-only as fallback
+                            release_date = parsed_date
+                            date_confidence = 'low'
                 
-                book = self.normalize_book_data({
-                    'title': title,
-                    'author': author_name,
-                    'release_date': release_date,
-                    'source_url': source_url,
-                    'metadata': {'table_source': True}
-                })
-                
-                books.append(book)
+                # Only include if we have a reasonable title and future date
+                if (title_text and len(title_text) > 2 and 
+                    release_date and self._is_future_date(release_date)):
+                    
+                    book = self.normalize_book_data({
+                        'title': title_text,
+                        'author': author_name,
+                        'release_date': release_date,
+                        'source_url': source_url,
+                        'metadata': {
+                            'table_source': True,
+                            'date_confidence': date_confidence
+                        }
+                    })
+                    
+                    books.append(book)
                 
         except Exception as e:
             logger.debug(f"Error parsing book table: {e}")
             
         return books
+    
+    def _is_invalid_title(self, title: str) -> bool:
+        """Check if title is obviously invalid (like publication order numbers)."""
+        if not title:
+            return True
+        
+        # Reject single digits or numbers
+        if title.isdigit():
+            return True
+        
+        # Reject very short strings
+        if len(title.strip()) < 3:
+            return True
+        
+        # Reject strings that are just numbers with punctuation
+        if re.match(r'^[\d\s\-\.]+$', title):
+            return True
+        
+        # Reject common table headers/metadata
+        invalid_patterns = [
+            r'^(book|title|name|author|date|year|order|#)$',
+            r'^(coming|soon|tbd|tba|unknown)$',
+            r'^\d+$',  # Just numbers
+            r'^[ivxlc]+$',  # Roman numerals only
+        ]
+        
+        for pattern in invalid_patterns:
+            if re.match(pattern, title.lower().strip()):
+                return True
+        
+        return False
+    
+    def _is_future_date(self, date_obj) -> bool:
+        """Check if date is in the future."""
+        try:
+            if isinstance(date_obj, str):
+                date_obj = self.parse_release_date(date_obj)
+            
+            if isinstance(date_obj, date):
+                return date_obj >= date.today()
+            
+            return False
+        except:
+            return False
     
     def _is_book_table(self, table) -> bool:
         """Check if table contains book data."""
