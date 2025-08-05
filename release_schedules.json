@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2025-08-05T14:40:08.490893",
+      "last_checked": "2025-08-05T14:50:24.622866",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +28,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/stephen-hunter",
       "discovery_date": "2025-08-05T14:40:10.096245",
-      "last_checked": "2025-08-05T14:40:10.096254",
+      "last_checked": "2025-08-05T14:50:24.622876",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +48,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2025-08-05T14:40:11.598213",
+      "last_checked": "2025-08-05T14:50:24.622883",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -68,7 +68,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-08-05T14:40:12.986939",
-      "last_checked": "2025-08-05T14:40:12.986948",
+      "last_checked": "2025-08-05T14:50:24.622893",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -88,7 +88,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2025-08-05T14:40:17.047328",
-      "last_checked": "2025-08-05T14:40:17.047339",
+      "last_checked": "2025-08-05T14:50:24.622900",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -99,7 +99,47 @@
         "source": "faq",
         "confidence": "high"
       }
+    },
+    {
+      "id": "lee_child_reacher_the_stories_2025",
+      "title": "Reacher: The Stories Behind the Stories",
+      "author": "Lee Child",
+      "release_date": "2025-09-09",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/lee-child",
+      "discovery_date": "2025-08-05T14:50:24.335072",
+      "last_checked": "2025-08-05T14:50:24.335080",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:50:25.200333"
+        }
+      ],
+      "metadata": {
+        "source": "faq_multiple",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "lee_child_exit_strategy_2025",
+      "title": "Exit Strategy",
+      "author": "Lee Child",
+      "release_date": "2025-11-04",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/lee-child",
+      "discovery_date": "2025-08-05T14:50:24.335236",
+      "last_checked": "2025-08-05T14:50:24.335239",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:50:25.200343"
+        }
+      ],
+      "metadata": {
+        "source": "faq_multiple",
+        "confidence": "high"
+      }
     }
   ],
-  "last_updated": "2025-08-05T14:40:17.486265"
+  "last_updated": "2025-08-05T14:50:25.200372"
 }
