@@ -1,4 +1,24 @@
 {
-  "books": [],
-  "last_updated": "2025-01-05T00:00:00.000000"
+  "books": [
+    {
+      "id": "james_s_3_2026",
+      "title": "3",
+      "author": "James S. A. Corey",
+      "release_date": "2026-01-01",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
+      "discovery_date": "2025-08-05T13:53:45.982041",
+      "last_checked": "2025-08-05T13:53:45.982043",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T13:53:51.926127"
+        }
+      ],
+      "metadata": {
+        "table_source": true
+      }
+    }
+  ],
+  "last_updated": "2025-08-05T13:53:51.926141"
 }
