@@ -50,18 +50,25 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         
-        # Check if there are changes to commit
-        if [ -n "$(git status --porcelain)" ]; then
+        # Add release_schedules.json if it exists
+        if [ -f "release_schedules.json" ]; then
           git add release_schedules.json
-          git commit -m "📚 Update release schedules - $(date -u +"%Y-%m-%d %H:%M UTC")
           
-          🤖 Generated with Book Release Tracker
-          
-          Co-Authored-By: GitHub Actions <noreply@github.com>" || echo "No changes to commit"
-          
-          git push
+          # Check if release_schedules.json has changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes detected in release_schedules.json"
+          else
+            git commit -m "📚 Update release schedules - $(date -u +"%Y-%m-%d %H:%M UTC")
+            
+            🤖 Generated with Book Release Tracker
+            
+            Co-Authored-By: GitHub Actions <noreply@github.com>"
+            
+            git push
+            echo "Release schedules updated and committed"
+          fi
         else
-          echo "No changes detected in release schedules"
+          echo "release_schedules.json not found - this might be expected on first run"
         fi
         
     - name: Upload monitoring logs
