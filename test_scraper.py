@@ -50,6 +50,7 @@ def main():
         ("James S. A. Corey", "james-s-a-corey"),
         ("Brandon Sanderson", "brandon-sanderson"),
         ("Lee Child", "lee-child"),
+        ("David Baldacci", "david-baldacci" ),
     ]
     
     for author_name, author_id in test_authors:

@@ -28,3 +28,8 @@ authors:
     book_notification_id: "jeffrey-archer"
     goodreads_backup: "https://www.goodreads.com/author/show/3345.Jeffrey_Archer"
     status: "active"
+
+  - name: "David Baldacci"
+    book_notification_id: "david-baldacci"
+    goodreads_backup: "https://www.goodreads.com/author/show/9291.David_Baldacci"
+    status: "active"
