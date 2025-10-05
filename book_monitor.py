@@ -8,6 +8,7 @@ Coordinates scraping, data management, and email notifications.
 import json
 import yaml
 import logging
+import copy
 from datetime import datetime, date, timedelta
 from typing import Dict, List, Optional
 import os
@@ -47,49 +48,49 @@ class BookMonitor:
             for author in authors:
                 if author.get('status') != 'active':
                     continue
-                    
+
                 logger.info(f"Scraping releases for {author['name']}")
                 books = self.scraper.scrape_author_releases(author)
                 all_discovered_books.extend(books)
-            
-            if not all_discovered_books:
-                logger.info("No books discovered from any authors")
-                return True
-            
-            # Process discovered books
+
+            # Process discovered books (only if any were found)
             new_discoveries = []
             date_changes = []
-            
-            for book in all_discovered_books:
-                existing_book = self.find_existing_book(book, existing_schedules)
-                
-                if not existing_book:
-                    # New book discovery
-                    new_discoveries.append(book)
-                    logger.info(f"New book discovered: {book['title']} by {book['author']}")
-                else:
-                    # Check for date changes
-                    if self.has_date_changed(book, existing_book):
-                        date_changes.append({
-                            'book': book,
-                            'old_date': existing_book.get('release_date'),
-                            'new_date': book.get('release_date')
-                        })
-                        logger.info(f"Release date changed for: {book['title']}")
-            
-            # Update release schedules with all books
+
+            if all_discovered_books:
+                for book in all_discovered_books:
+                    existing_book = self.find_existing_book(book, existing_schedules)
+
+                    if not existing_book:
+                        # New book discovery
+                        new_discoveries.append(book)
+                        logger.info(f"New book discovered: {book['title']} by {book['author']}")
+                    else:
+                        # Check for date changes
+                        if self.has_date_changed(book, existing_book):
+                            date_changes.append({
+                                'book': book,
+                                'old_date': existing_book.get('release_date'),
+                                'new_date': book.get('release_date')
+                            })
+                            logger.info(f"Release date changed for: {book['title']}")
+            else:
+                logger.info("No books discovered from any authors during scraping")
+
+            # Update release schedules with all books (even if scraping found nothing)
             updated_schedules = self.update_release_schedules(
                 existing_schedules, all_discovered_books
             )
-            
-            # Send notifications
+
+            # Send notifications (before cleanup to avoid data loss on failure)
+            # This includes reminders and release day alerts for existing books
             self.send_notifications(updated_schedules, new_discoveries, date_changes)
-            
+
+            # Clean up old releases (after notifications, before save)
+            self.cleanup_old_releases(updated_schedules)
+
             # Save updated schedules
             self.save_release_schedules(updated_schedules)
-            
-            # Clean up old releases
-            self.cleanup_old_releases(updated_schedules)
             
             logger.info("Monitoring cycle completed successfully")
             return True
@@ -177,7 +178,14 @@ class BookMonitor:
                 return existing
         
         return None
-    
+
+    def _find_book_by_id(self, schedules: Dict, book_id: str) -> Optional[Dict]:
+        """Find a book in schedules by ID."""
+        for book in schedules.get('books', []):
+            if book.get('id') == book_id:
+                return book
+        return None
+
     def has_date_changed(self, new_book: Dict, existing_book: Dict) -> bool:
         """Check if release date has changed between versions."""
         
@@ -206,8 +214,8 @@ class BookMonitor:
                     (existing.get('title', '').lower() == new_book.get('title', '').lower() and
                      existing.get('author', '').lower() == new_book.get('author', '').lower())):
                     
-                    # Update existing book with new data
-                    updated_book = existing.copy()
+                    # Update existing book with new data (use deepcopy to avoid modifying original)
+                    updated_book = copy.deepcopy(existing)
                     updated_book.update({
                         'title': new_book.get('title', existing.get('title')),
                         'release_date': new_book.get('release_date', existing.get('release_date')),
@@ -216,13 +224,14 @@ class BookMonitor:
                         'metadata': {**existing.get('metadata', {}), **new_book.get('metadata', {})}
                     })
                     break
-            
+
             if updated_book:
                 updated_books.append(updated_book)
             else:
-                # Keep existing book even if not found in new scrape
-                existing['last_checked'] = datetime.now().isoformat()
-                updated_books.append(existing)
+                # Keep existing book even if not found in new scrape (use deepcopy to avoid mutation)
+                existing_copy = copy.deepcopy(existing)
+                existing_copy['last_checked'] = datetime.now().isoformat()
+                updated_books.append(existing_copy)
         
         # Add genuinely new books
         for new_book in new_books:
@@ -254,12 +263,20 @@ class BookMonitor:
             logger.info(f"Sending discovery notifications for {len(new_discoveries)} books")
             success = self.email_sender.send_book_discovery_alert(new_discoveries)
             if success:
+                logger.info(f"Successfully sent discovery notifications")
                 # Mark notifications as sent
                 for book in new_discoveries:
-                    book.setdefault('notifications_sent', []).append({
-                        'type': 'discovery',
-                        'date': datetime.now().isoformat()
-                    })
+                    # Find the book in updated schedules and add notification
+                    book_to_update = self._find_book_by_id(schedules, book['id'])
+                    if book_to_update:
+                        book_to_update.setdefault('notifications_sent', []).append({
+                            'type': 'discovery',
+                            'date': datetime.now().isoformat()
+                        })
+                    else:
+                        logger.warning(f"Could not find book {book['id']} in updated schedules to record notification")
+            else:
+                logger.error(f"Failed to send discovery notifications for {len(new_discoveries)} books")
         
         # Date change notifications (treat as new discovery)
         if date_changes:
@@ -267,13 +284,21 @@ class BookMonitor:
             logger.info(f"Sending date change notifications for {len(changed_books)} books")
             success = self.email_sender.send_book_discovery_alert(changed_books)
             if success:
+                logger.info(f"Successfully sent date change notifications")
                 for change in date_changes:
-                    change['book'].setdefault('notifications_sent', []).append({
-                        'type': 'date_change',
-                        'date': datetime.now().isoformat(),
-                        'old_date': str(change.get('old_date', '')),
-                        'new_date': str(change.get('new_date', ''))
-                    })
+                    # Find the book in updated schedules and add notification
+                    book_to_update = self._find_book_by_id(schedules, change['book']['id'])
+                    if book_to_update:
+                        book_to_update.setdefault('notifications_sent', []).append({
+                            'type': 'date_change',
+                            'date': datetime.now().isoformat(),
+                            'old_date': str(change.get('old_date', '')),
+                            'new_date': str(change.get('new_date', ''))
+                        })
+                    else:
+                        logger.warning(f"Could not find book {change['book']['id']} in updated schedules to record notification")
+            else:
+                logger.error(f"Failed to send date change notifications for {len(changed_books)} books")
         
         # 7-day reminders
         reminder_books = []
@@ -285,11 +310,19 @@ class BookMonitor:
             logger.info(f"Sending 7-day reminders for {len(reminder_books)} books")
             success = self.email_sender.send_release_reminder(reminder_books)
             if success:
+                logger.info(f"Successfully sent 7-day reminder notifications")
                 for book in reminder_books:
-                    book.setdefault('notifications_sent', []).append({
-                        'type': 'reminder',
-                        'date': datetime.now().isoformat()
-                    })
+                    # Find the book in updated schedules and add notification
+                    book_to_update = self._find_book_by_id(schedules, book['id'])
+                    if book_to_update:
+                        book_to_update.setdefault('notifications_sent', []).append({
+                            'type': 'reminder',
+                            'date': datetime.now().isoformat()
+                        })
+                    else:
+                        logger.warning(f"Could not find book {book['id']} in updated schedules to record notification")
+            else:
+                logger.error(f"Failed to send 7-day reminder notifications for {len(reminder_books)} books")
         
         # Release day notifications
         release_day_books = []
@@ -301,11 +334,19 @@ class BookMonitor:
             logger.info(f"Sending release day alerts for {len(release_day_books)} books")
             success = self.email_sender.send_release_day_alert(release_day_books)
             if success:
+                logger.info(f"Successfully sent release day notifications")
                 for book in release_day_books:
-                    book.setdefault('notifications_sent', []).append({
-                        'type': 'release_day',
-                        'date': datetime.now().isoformat()
-                    })
+                    # Find the book in updated schedules and add notification
+                    book_to_update = self._find_book_by_id(schedules, book['id'])
+                    if book_to_update:
+                        book_to_update.setdefault('notifications_sent', []).append({
+                            'type': 'release_day',
+                            'date': datetime.now().isoformat()
+                        })
+                    else:
+                        logger.warning(f"Could not find book {book['id']} in updated schedules to record notification")
+            else:
+                logger.error(f"Failed to send release day notifications for {len(release_day_books)} books")
     
     def should_send_reminder(self, book: Dict, today: date) -> bool:
         """Check if 7-day reminder should be sent for book."""
