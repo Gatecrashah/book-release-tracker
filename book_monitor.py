@@ -199,56 +199,75 @@ class BookMonitor:
         return new_date_str != existing_date_str
     
     def update_release_schedules(self, existing_schedules: Dict, new_books: List[Dict]) -> Dict:
-        """Update release schedules with new book data."""
-        
-        updated_books = []
-        existing_books = existing_schedules.get('books', [])
-        
-        # Start with existing books, updated with new information
-        for existing in existing_books:
-            updated_book = None
-            
-            # Find matching new book
-            for new_book in new_books:
-                if (existing.get('id') == new_book.get('id') or 
-                    (existing.get('title', '').lower() == new_book.get('title', '').lower() and
-                     existing.get('author', '').lower() == new_book.get('author', '').lower())):
-                    
-                    # Update existing book with new data (use deepcopy to avoid modifying original)
-                    updated_book = copy.deepcopy(existing)
-                    updated_book.update({
-                        'title': new_book.get('title', existing.get('title')),
-                        'release_date': new_book.get('release_date', existing.get('release_date')),
-                        'source_url': new_book.get('source_url', existing.get('source_url')),
-                        'last_checked': datetime.now().isoformat(),
-                        'metadata': {**existing.get('metadata', {}), **new_book.get('metadata', {})}
-                    })
-                    break
+        """
+        Update release schedules with new book data.
 
-            if updated_book:
-                updated_books.append(updated_book)
+        Uses dictionary-based lookup for O(n) performance instead of nested loops O(n*m).
+        """
+
+        existing_books = existing_schedules.get('books', [])
+
+        # Create indexes for O(1) lookup:
+        # 1. Index by book ID
+        # 2. Index by (title, author) tuple for fallback matching
+        existing_by_id = {}
+        existing_by_title_author = {}
+
+        for existing in existing_books:
+            book_id = existing.get('id')
+            if book_id:
+                existing_by_id[book_id] = existing
+
+            # Also index by title+author for fallback matching
+            title = existing.get('title', '').lower()
+            author = existing.get('author', '').lower()
+            if title and author:
+                existing_by_title_author[(title, author)] = existing
+
+        # Track which existing books have been matched/updated
+        updated_book_ids = set()
+        final_books = []
+
+        # Process new books: update existing or add as new
+        for new_book in new_books:
+            new_id = new_book.get('id')
+            new_title = new_book.get('title', '').lower()
+            new_author = new_book.get('author', '').lower()
+
+            # Try to find matching existing book (by ID first, then title+author)
+            existing = None
+            if new_id and new_id in existing_by_id:
+                existing = existing_by_id[new_id]
+            elif (new_title, new_author) in existing_by_title_author:
+                existing = existing_by_title_author[(new_title, new_author)]
+
+            if existing:
+                # Update existing book with new data (use deepcopy to avoid modifying original)
+                updated_book = copy.deepcopy(existing)
+                updated_book.update({
+                    'title': new_book.get('title', existing.get('title')),
+                    'release_date': new_book.get('release_date', existing.get('release_date')),
+                    'source_url': new_book.get('source_url', existing.get('source_url')),
+                    'last_checked': datetime.now().isoformat(),
+                    'metadata': {**existing.get('metadata', {}), **new_book.get('metadata', {})}
+                })
+                final_books.append(updated_book)
+                updated_book_ids.add(existing.get('id'))
             else:
+                # Genuinely new book - add it
+                final_books.append(new_book)
+
+        # Add existing books that weren't matched with any new books
+        for existing in existing_books:
+            existing_id = existing.get('id')
+            if existing_id not in updated_book_ids:
                 # Keep existing book even if not found in new scrape (use deepcopy to avoid mutation)
                 existing_copy = copy.deepcopy(existing)
                 existing_copy['last_checked'] = datetime.now().isoformat()
-                updated_books.append(existing_copy)
-        
-        # Add genuinely new books
-        for new_book in new_books:
-            is_new = True
-            
-            for existing in existing_books:
-                if (existing.get('id') == new_book.get('id') or 
-                    (existing.get('title', '').lower() == new_book.get('title', '').lower() and
-                     existing.get('author', '').lower() == new_book.get('author', '').lower())):
-                    is_new = False
-                    break
-            
-            if is_new:
-                updated_books.append(new_book)
-        
+                final_books.append(existing_copy)
+
         return {
-            'books': updated_books,
+            'books': final_books,
             'last_updated': datetime.now().isoformat()
         }
     
