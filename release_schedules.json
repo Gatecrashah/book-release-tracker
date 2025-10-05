@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2025-10-05T10:57:24.181223",
+      "last_checked": "2025-10-05T11:06:39.878651",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +28,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/stephen-hunter",
       "discovery_date": "2025-08-05T14:40:10.096245",
-      "last_checked": "2025-10-05T10:57:24.181243",
+      "last_checked": "2025-10-05T11:06:39.878675",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +48,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2025-10-05T10:57:24.181259",
+      "last_checked": "2025-10-05T11:06:39.878692",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -68,7 +68,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-08-05T14:40:12.986939",
-      "last_checked": "2025-10-05T10:57:24.181277",
+      "last_checked": "2025-10-05T11:06:39.878708",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -81,46 +81,6 @@
       }
     },
     {
-      "id": "jeffrey_archer_end_game_2025",
-      "title": "End Game",
-      "author": "Jeffrey Archer",
-      "release_date": "2025-09-23",
-      "status": "upcoming",
-      "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
-      "discovery_date": "2025-08-05T14:40:17.047328",
-      "last_checked": "2025-10-05T10:57:24.181292",
-      "notifications_sent": [
-        {
-          "type": "discovery",
-          "date": "2025-08-05T14:40:17.486244"
-        }
-      ],
-      "metadata": {
-        "source": "faq",
-        "confidence": "high"
-      }
-    },
-    {
-      "id": "lee_child_reacher_the_stories_2025",
-      "title": "Reacher: The Stories Behind the Stories",
-      "author": "Lee Child",
-      "release_date": "2025-09-09",
-      "status": "upcoming",
-      "source_url": "https://www.booknotification.com/authors/lee-child",
-      "discovery_date": "2025-08-05T14:50:24.335072",
-      "last_checked": "2025-10-05T10:57:24.181306",
-      "notifications_sent": [
-        {
-          "type": "discovery",
-          "date": "2025-08-05T14:50:25.200333"
-        }
-      ],
-      "metadata": {
-        "source": "faq_multiple",
-        "confidence": "high"
-      }
-    },
-    {
       "id": "lee_child_exit_strategy_2025",
       "title": "Exit Strategy",
       "author": "Lee Child",
@@ -128,7 +88,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335236",
-      "last_checked": "2025-10-05T10:57:24.181341",
+      "last_checked": "2025-10-05T11:06:39.878722",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -148,7 +108,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-08-06T10:07:24.641436",
-      "last_checked": "2025-10-05T10:57:24.181359",
+      "last_checked": "2025-10-05T11:06:39.878736",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -159,7 +119,47 @@
         "source": "faq",
         "confidence": "high"
       }
+    },
+    {
+      "id": "jeffrey_archer_end_game_2025",
+      "title": "End Game",
+      "author": "Jeffrey Archer",
+      "release_date": "2025-09-23",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
+      "discovery_date": "2025-08-05T14:40:17.047328",
+      "last_checked": "2025-10-05T11:06:39.878749",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:40:17.486244"
+        }
+      ],
+      "metadata": {
+        "source": "faq",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "lee_child_reacher_the_stories_2025",
+      "title": "Reacher: The Stories Behind the Stories",
+      "author": "Lee Child",
+      "release_date": "2025-09-09",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/lee-child",
+      "discovery_date": "2025-08-05T14:50:24.335072",
+      "last_checked": "2025-10-05T11:06:39.878761",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:50:25.200333"
+        }
+      ],
+      "metadata": {
+        "source": "faq_multiple",
+        "confidence": "high"
+      }
     }
   ],
-  "last_updated": "2025-10-05T10:57:24.181408"
+  "last_updated": "2025-10-05T11:06:39.878804"
 }
