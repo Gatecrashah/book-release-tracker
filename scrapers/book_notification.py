@@ -74,7 +74,7 @@ class BookNotificationScraper(BaseBookScraper):
                     parent_text = text.parent.get_text()
                     
                     # First try the complete pattern
-                    pattern = r'(.+?)\s+has a new book coming out on\s+([^c]+?)called\s+(.+?)(?:\.|$)'
+                    pattern = r'(.+?)\s+has a new book coming out on\s+(.+?)\s+called\s+(.+?)(?:\.|$)'
                     matches = re.search(pattern, parent_text, re.IGNORECASE)
                     
                     if matches:
