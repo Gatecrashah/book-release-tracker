@@ -188,16 +188,36 @@ class BookMonitor:
 
     def has_date_changed(self, new_book: Dict, existing_book: Dict) -> bool:
         """Check if release date has changed between versions."""
-        
+
         new_date = new_book.get('release_date')
         existing_date = existing_book.get('release_date')
-        
+
         # Convert to comparable format
         new_date_str = str(new_date) if new_date else ""
         existing_date_str = str(existing_date) if existing_date else ""
-        
+
         return new_date_str != existing_date_str
-    
+
+    def _update_book_status(self, book: Dict) -> None:
+        """Update book status to 'released' if release date has passed."""
+
+        release_date = book.get('release_date')
+        if not release_date:
+            return
+
+        try:
+            if isinstance(release_date, str):
+                release_date_obj = datetime.fromisoformat(release_date.replace('Z', '+00:00')).date()
+            elif isinstance(release_date, date):
+                release_date_obj = release_date
+            else:
+                return
+
+            if release_date_obj <= date.today():
+                book['status'] = 'released'
+        except Exception as e:
+            logger.warning(f"Could not parse release date for status update: {release_date}")
+
     def update_release_schedules(self, existing_schedules: Dict, new_books: List[Dict]) -> Dict:
         """
         Update release schedules with new book data.
@@ -265,6 +285,10 @@ class BookMonitor:
                 existing_copy = copy.deepcopy(existing)
                 existing_copy['last_checked'] = datetime.now().isoformat()
                 final_books.append(existing_copy)
+
+        # Update status for all books based on release dates
+        for book in final_books:
+            self._update_book_status(book)
 
         return {
             'books': final_books,
