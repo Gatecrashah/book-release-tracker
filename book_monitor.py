@@ -186,6 +186,27 @@ class BookMonitor:
                 return book
         return None
 
+    def _record_notification(self, schedules: Dict, book_id: str, notification_type: str, **extra_fields) -> None:
+        """
+        Record a notification as sent for a book.
+
+        Args:
+            schedules: The schedules dictionary containing books
+            book_id: ID of the book to record notification for
+            notification_type: Type of notification (e.g., 'discovery', 'reminder', 'release_day', 'date_change')
+            **extra_fields: Additional fields to include in the notification record (e.g., old_date, new_date)
+        """
+        book_to_update = self._find_book_by_id(schedules, book_id)
+        if book_to_update:
+            notification_record = {
+                'type': notification_type,
+                'date': datetime.now().isoformat(),
+                **extra_fields
+            }
+            book_to_update.setdefault('notifications_sent', []).append(notification_record)
+        else:
+            logger.warning(f"Could not find book {book_id} in updated schedules to record notification")
+
     def has_date_changed(self, new_book: Dict, existing_book: Dict) -> bool:
         """Check if release date has changed between versions."""
 
@@ -329,15 +350,7 @@ class BookMonitor:
                 logger.info(f"Successfully sent discovery notifications")
                 # Mark notifications as sent
                 for book in new_discoveries:
-                    # Find the book in updated schedules and add notification
-                    book_to_update = self._find_book_by_id(schedules, book['id'])
-                    if book_to_update:
-                        book_to_update.setdefault('notifications_sent', []).append({
-                            'type': 'discovery',
-                            'date': datetime.now().isoformat()
-                        })
-                    else:
-                        logger.warning(f"Could not find book {book['id']} in updated schedules to record notification")
+                    self._record_notification(schedules, book['id'], 'discovery')
             else:
                 logger.error(f"Failed to send discovery notifications for {len(new_discoveries)} books")
         
@@ -349,17 +362,13 @@ class BookMonitor:
             if success:
                 logger.info(f"Successfully sent date change notifications")
                 for change in date_changes:
-                    # Find the book in updated schedules and add notification
-                    book_to_update = self._find_book_by_id(schedules, change['book']['id'])
-                    if book_to_update:
-                        book_to_update.setdefault('notifications_sent', []).append({
-                            'type': 'date_change',
-                            'date': datetime.now().isoformat(),
-                            'old_date': str(change.get('old_date', '')),
-                            'new_date': str(change.get('new_date', ''))
-                        })
-                    else:
-                        logger.warning(f"Could not find book {change['book']['id']} in updated schedules to record notification")
+                    self._record_notification(
+                        schedules,
+                        change['book']['id'],
+                        'date_change',
+                        old_date=str(change.get('old_date', '')),
+                        new_date=str(change.get('new_date', ''))
+                    )
             else:
                 logger.error(f"Failed to send date change notifications for {len(changed_books)} books")
         
@@ -375,15 +384,7 @@ class BookMonitor:
             if success:
                 logger.info(f"Successfully sent 7-day reminder notifications")
                 for book in reminder_books:
-                    # Find the book in updated schedules and add notification
-                    book_to_update = self._find_book_by_id(schedules, book['id'])
-                    if book_to_update:
-                        book_to_update.setdefault('notifications_sent', []).append({
-                            'type': 'reminder',
-                            'date': datetime.now().isoformat()
-                        })
-                    else:
-                        logger.warning(f"Could not find book {book['id']} in updated schedules to record notification")
+                    self._record_notification(schedules, book['id'], 'reminder')
             else:
                 logger.error(f"Failed to send 7-day reminder notifications for {len(reminder_books)} books")
         
@@ -399,15 +400,7 @@ class BookMonitor:
             if success:
                 logger.info(f"Successfully sent release day notifications")
                 for book in release_day_books:
-                    # Find the book in updated schedules and add notification
-                    book_to_update = self._find_book_by_id(schedules, book['id'])
-                    if book_to_update:
-                        book_to_update.setdefault('notifications_sent', []).append({
-                            'type': 'release_day',
-                            'date': datetime.now().isoformat()
-                        })
-                    else:
-                        logger.warning(f"Could not find book {book['id']} in updated schedules to record notification")
+                    self._record_notification(schedules, book['id'], 'release_day')
             else:
                 logger.error(f"Failed to send release day notifications for {len(release_day_books)} books")
     
