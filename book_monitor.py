@@ -198,25 +198,41 @@ class BookMonitor:
 
         return new_date_str != existing_date_str
 
+    def _parse_date_field(self, date_value) -> Optional[date]:
+        """
+        Parse a date field that could be a string, date object, or other type.
+
+        Args:
+            date_value: Date value in various formats (str, date, datetime, or other)
+
+        Returns:
+            date object or None if parsing fails
+        """
+        if not date_value:
+            return None
+
+        try:
+            if isinstance(date_value, str):
+                return datetime.fromisoformat(date_value.replace('Z', '+00:00')).date()
+            elif isinstance(date_value, datetime):
+                # Check datetime BEFORE date (datetime is a subclass of date)
+                return date_value.date()
+            elif isinstance(date_value, date):
+                return date_value
+            else:
+                return None
+        except Exception as e:
+            logger.warning(f"Could not parse date value: {date_value} - {e}")
+            return None
+
     def _update_book_status(self, book: Dict) -> None:
         """Update book status to 'released' if release date has passed."""
 
         release_date = book.get('release_date')
-        if not release_date:
-            return
+        release_date_obj = self._parse_date_field(release_date)
 
-        try:
-            if isinstance(release_date, str):
-                release_date_obj = datetime.fromisoformat(release_date.replace('Z', '+00:00')).date()
-            elif isinstance(release_date, date):
-                release_date_obj = release_date
-            else:
-                return
-
-            if release_date_obj <= date.today():
-                book['status'] = 'released'
-        except Exception as e:
-            logger.warning(f"Could not parse release date for status update: {release_date}")
+        if release_date_obj and release_date_obj <= date.today():
+            book['status'] = 'released'
 
     def update_release_schedules(self, existing_schedules: Dict, new_books: List[Dict]) -> Dict:
         """
@@ -393,97 +409,68 @@ class BookMonitor:
     
     def should_send_reminder(self, book: Dict, today: date) -> bool:
         """Check if 7-day reminder should be sent for book."""
-        
+
         release_date = book.get('release_date')
-        if not release_date:
+        release_date_obj = self._parse_date_field(release_date)
+
+        if not release_date_obj:
             return False
-        
-        # Parse release date
-        if isinstance(release_date, str):
-            try:
-                release_date = datetime.fromisoformat(release_date.replace('Z', '+00:00')).date()
-            except:
-                return False
-        elif not isinstance(release_date, date):
-            return False
-        
+
         # Check if 7 days before release
-        reminder_date = release_date - timedelta(days=7)
+        reminder_date = release_date_obj - timedelta(days=7)
         if today != reminder_date:
             return False
-        
+
         # Check if reminder already sent
         notifications = book.get('notifications_sent', [])
         for notification in notifications:
             if notification.get('type') == 'reminder':
                 return False
-        
+
         return True
     
     def should_send_release_day_alert(self, book: Dict, today: date) -> bool:
         """Check if release day alert should be sent for book."""
-        
+
         release_date = book.get('release_date')
-        if not release_date:
+        release_date_obj = self._parse_date_field(release_date)
+
+        if not release_date_obj:
             return False
-        
-        # Parse release date
-        if isinstance(release_date, str):
-            try:
-                release_date = datetime.fromisoformat(release_date.replace('Z', '+00:00')).date()
-            except:
-                return False
-        elif not isinstance(release_date, date):
-            return False
-        
+
         # Check if it's release day
-        if today != release_date:
+        if today != release_date_obj:
             return False
-        
+
         # Check if release day alert already sent
         notifications = book.get('notifications_sent', [])
         for notification in notifications:
             if notification.get('type') == 'release_day':
                 return False
-        
+
         return True
     
     def cleanup_old_releases(self, schedules: Dict):
         """Remove books released more than 6 months ago."""
-        
+
         cutoff_date = date.today() - timedelta(days=180)  # 6 months
         books = schedules.get('books', [])
-        
+
         books_to_keep = []
         removed_count = 0
-        
+
         for book in books:
             release_date = book.get('release_date')
-            should_keep = True
-            
-            if release_date:
-                # Parse release date
-                if isinstance(release_date, str):
-                    try:
-                        release_date = datetime.fromisoformat(release_date.replace('Z', '+00:00')).date()
-                    except:
-                        # Keep books with unparseable dates
-                        should_keep = True
-                elif isinstance(release_date, date):
-                    pass
-                else:
-                    # Keep books with unknown date types
-                    should_keep = True
-                
-                # Check if book is old enough to remove
-                if isinstance(release_date, date) and release_date < cutoff_date:
-                    should_keep = False
-                    removed_count += 1
-                    logger.info(f"Removing old release: {book.get('title')} by {book.get('author')} (released {release_date})")
-            
-            if should_keep:
+            release_date_obj = self._parse_date_field(release_date)
+
+            # Remove if release date is valid and older than cutoff
+            if release_date_obj and release_date_obj < cutoff_date:
+                removed_count += 1
+                logger.info(f"Removing old release: {book.get('title')} by {book.get('author')} (released {release_date_obj})")
+            else:
+                # Keep books with no date, unparseable dates, or recent releases
                 books_to_keep.append(book)
-        
+
         if removed_count > 0:
             schedules['books'] = books_to_keep
             logger.info(f"Cleaned up {removed_count} old releases")
