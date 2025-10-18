@@ -226,13 +226,17 @@ class BookMonitor:
             return None
 
     def _update_book_status(self, book: Dict) -> None:
-        """Update book status to 'released' if release date has passed."""
+        """Update book status based on release date."""
 
         release_date = book.get('release_date')
         release_date_obj = self._parse_date_field(release_date)
 
-        if release_date_obj and release_date_obj <= date.today():
-            book['status'] = 'released'
+        if release_date_obj:
+            if release_date_obj <= date.today():
+                book['status'] = 'released'
+            else:
+                book['status'] = 'upcoming'
+        # If release_date_obj is None, keep existing status unchanged
 
     def update_release_schedules(self, existing_schedules: Dict, new_books: List[Dict]) -> Dict:
         """
