@@ -4,7 +4,7 @@ Automated book release tracker that monitors your favorite authors for new book 
 
 ## 🎯 Features
 
-- **Automated Weekly Monitoring**: Checks for new releases every Sunday
+- **Automated Daily Monitoring**: Checks for new releases every day at 9:00 AM UTC
 - **Smart Notifications**: 
   - New book discoveries
   - Release date changes  
@@ -23,6 +23,7 @@ Automated book release tracker that monitors your favorite authors for new book 
 - Jack Carr
 - Lee Child
 - Jeffrey Archer
+- David Baldacci
 
 ## 🏗️ Architecture
 
@@ -90,7 +91,7 @@ by Brandon Sanderson
 ## 🤖 Automation
 
 ### GitHub Actions Workflow
-- **Schedule**: Every Sunday at 9:00 AM UTC
+- **Schedule**: Daily at 9:00 AM UTC
 - **Triggers**: Manual trigger + code changes
 - **Actions**: 
   1. Scrape author pages for new releases
@@ -111,7 +112,6 @@ Edit `authors.yaml`:
 authors:
   - name: "New Author Name"
     book_notification_id: "author-url-slug"
-    goodreads_backup: "https://www.goodreads.com/author/show/XXXXX.Author_Name"
     status: "active"
 ```
 

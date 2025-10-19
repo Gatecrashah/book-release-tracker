@@ -49,7 +49,7 @@ Required for local testing and production:
 - `EMAIL_TO`: Recipient email address
 
 ### GitHub Actions Integration
-- Weekly schedule (Sundays 9:00 AM UTC)
+- Daily schedule (9:00 AM UTC)
 - Automatically commits changes to `release_schedules.json`
 - Uses GitHub Secrets for API keys
 
