@@ -1,3 +1,16 @@
+# Author Configuration
+#
+# This file defines which authors to monitor for new book releases.
+#
+# Fields:
+#   - name: Author's full name (required)
+#   - book_notification_id: URL slug from booknotification.com/authors/{id} (required)
+#   - goodreads_backup: Goodreads author URL (optional, currently unused but preserved for future scraper fallback)
+#   - status: "active" or "inactive" (required)
+#
+# Note: The goodreads_backup field is not currently used by any scrapers.
+#       It is kept for potential future implementation of a Goodreads fallback scraper.
+
 authors:
   - name: "Brandon Sanderson"
     book_notification_id: "brandon-sanderson"

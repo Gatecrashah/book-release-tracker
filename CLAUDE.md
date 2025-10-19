@@ -59,9 +59,11 @@ Add new authors to `authors.yaml`:
 authors:
   - name: "Author Name"
     book_notification_id: "author-url-slug"  # From booknotification.com URL
-    goodreads_backup: "https://www.goodreads.com/author/show/XXXXX"
+    goodreads_backup: "https://www.goodreads.com/author/show/XXXXX"  # Optional, currently unused
     status: "active"
 ```
+
+**Note:** The `goodreads_backup` field is currently unused but preserved for potential future implementation of a Goodreads fallback scraper.
 
 ### Local Development Workflow
 
