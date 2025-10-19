@@ -74,3 +74,18 @@ authors:
 - `release_schedules.json` should be reset to empty `{"books": [], "last_updated": "..."}` when scraper logic changes significantly
 - The system automatically handles deduplication and tracks notification history
 - Book IDs are generated from normalized titles and authors to prevent duplicates
+
+### Important: release_schedules.json Handling
+
+**NEVER manually commit `release_schedules.json`** - it's auto-managed by GitHub Actions.
+
+When committing other changes, always restore this file first to avoid conflicts:
+
+```bash
+# Before pushing any commits:
+git restore release_schedules.json
+git pull --rebase
+git push
+```
+
+Why: GitHub Actions runs daily and auto-commits updates to this file. If you include it in your commits, you'll get merge conflicts on every push.
