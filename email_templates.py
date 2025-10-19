@@ -9,7 +9,44 @@ from datetime import datetime, date
 
 class EmailTemplates:
     """Centralized email template manager for book releases"""
-    
+
+    # Notification type configurations
+    NOTIFICATION_CONFIGS = {
+        'discovery': {
+            'subject_emoji': '📚',
+            'subject_template': '{count} new {plural} discovered!',
+            'header_title': '📚 New Book Release Alert!',
+            'header_subtitle': '{count} new {plural} discovered from your favorite authors',
+            'footer_message': 'Stay tuned for more release updates! 📖',
+            'css_class': 'new-release',
+            'badge_class': 'type-discovery',
+            'badge_text': 'NEW DISCOVERY',
+            'icon': '📚'
+        },
+        'reminder': {
+            'subject_emoji': '📅',
+            'subject_template': '{count} {plural} releasing in 7 days!',
+            'header_title': '📅 Release Reminder',
+            'header_subtitle': '{count} {plural} from your favorite authors releasing in 7 days!',
+            'footer_message': "Don't forget to pre-order! 📚",
+            'css_class': 'release-reminder',
+            'badge_class': 'type-reminder',
+            'badge_text': '7-DAY REMINDER',
+            'icon': '📅'
+        },
+        'release': {
+            'subject_emoji': '🎉',
+            'subject_template': '{count} {plural} available now!',
+            'header_title': '🎉 Release Day!',
+            'header_subtitle': '{count} {plural} from your favorite authors available now!',
+            'footer_message': 'Happy reading! 📖',
+            'css_class': 'release-day',
+            'badge_class': 'type-release',
+            'badge_text': 'OUT TODAY!',
+            'icon': '🎉'
+        }
+    }
+
     @staticmethod
     def get_base_styles() -> str:
         """Common CSS styles for all email templates"""
@@ -131,18 +168,34 @@ class EmailTemplates:
             """
         
         book_html += "</div>"
-        
+
         return book_html
-    
+
     @classmethod
-    def create_book_discovery_email(cls, books: List[Dict]) -> str:
-        """Create email for newly discovered book releases"""
+    def create_book_notification_email(cls, books: List[Dict], notification_type: str) -> str:
+        """
+        Unified method to create email for book notifications.
+
+        Args:
+            books: List of book dictionaries
+            notification_type: Type of notification ('discovery', 'reminder', or 'release')
+
+        Returns:
+            HTML string for the email
+        """
         if not books:
-            return "No new books discovered."
-        
+            return "No books to display."
+
+        # Get configuration for this notification type
+        config = cls.NOTIFICATION_CONFIGS.get(notification_type)
+        if not config:
+            raise ValueError(f"Unknown notification type: {notification_type}")
+
+        # Calculate book count and plural
         book_count = len(books)
         plural = "book" if book_count == 1 else "books"
-        
+
+        # Build HTML email
         html_content = f"""
         <html>
         <head>
@@ -152,101 +205,42 @@ class EmailTemplates:
         </head>
         <body>
             <div class="header">
-                <h1>📚 New Book Release Alert!</h1>
-                <p>{book_count} new {plural} discovered from your favorite authors</p>
+                <h1>{config['header_title']}</h1>
+                <p>{config['header_subtitle'].format(count=book_count, plural=plural)}</p>
             </div>
         """
-        
+
+        # Add each book
         for book in books:
-            html_content += cls.format_book_notification(book, 'discovery')
-        
-        html_content += """
+            html_content += cls.format_book_notification(book, notification_type)
+
+        # Add footer
+        html_content += f"""
             <div class="footer">
                 <p><strong>🤖 Automated by your Book Release Tracker</strong></p>
-                <p>Stay tuned for more release updates! 📖</p>
+                <p>{config['footer_message']}</p>
                 <p><em>Powered by Resend API</em></p>
             </div>
         </body>
         </html>
         """
-        
+
         return html_content
+
+    @classmethod
+    def create_book_discovery_email(cls, books: List[Dict]) -> str:
+        """Create email for newly discovered book releases"""
+        return cls.create_book_notification_email(books, 'discovery')
     
     @classmethod
     def create_release_reminder_email(cls, books: List[Dict]) -> str:
         """Create email for 7-day release reminders"""
-        if not books:
-            return "No release reminders."
-        
-        book_count = len(books)
-        plural = "book" if book_count == 1 else "books"
-        
-        html_content = f"""
-        <html>
-        <head>
-            <style>
-                {cls.get_base_styles()}
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h1>📅 Release Reminder</h1>
-                <p>{book_count} {plural} from your favorite authors releasing in 7 days!</p>
-            </div>
-        """
-        
-        for book in books:
-            html_content += cls.format_book_notification(book, 'reminder')
-        
-        html_content += """
-            <div class="footer">
-                <p><strong>🤖 Automated by your Book Release Tracker</strong></p>
-                <p>Don't forget to pre-order! 📚</p>
-                <p><em>Powered by Resend API</em></p>
-            </div>
-        </body>
-        </html>
-        """
-        
-        return html_content
+        return cls.create_book_notification_email(books, 'reminder')
     
     @classmethod
     def create_release_day_email(cls, books: List[Dict]) -> str:
         """Create email for release day notifications"""
-        if not books:
-            return "No books releasing today."
-        
-        book_count = len(books)
-        plural = "book" if book_count == 1 else "books"
-        
-        html_content = f"""
-        <html>
-        <head>
-            <style>
-                {cls.get_base_styles()}
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <h1>🎉 Release Day!</h1>
-                <p>{book_count} {plural} from your favorite authors available now!</p>
-            </div>
-        """
-        
-        for book in books:
-            html_content += cls.format_book_notification(book, 'release')
-        
-        html_content += """
-            <div class="footer">
-                <p><strong>🤖 Automated by your Book Release Tracker</strong></p>
-                <p>Happy reading! 📖</p>
-                <p><em>Powered by Resend API</em></p>
-            </div>
-        </body>
-        </html>
-        """
-        
-        return html_content
+        return cls.create_book_notification_email(books, 'release')
     
     @classmethod
     def create_failure_alert_email(cls, error_details: str) -> str:
