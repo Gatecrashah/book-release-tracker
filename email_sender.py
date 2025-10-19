@@ -23,73 +23,62 @@ class EmailSender:
             raise ValueError("RESEND_API_KEY environment variable is required")
         if not self.email_to:
             raise ValueError("EMAIL_TO environment variable is required")
-    
-    def send_book_discovery_alert(self, books: List[Dict]) -> bool:
-        """Send email notification about newly discovered books"""
-        
+
+    def send_book_notification(self, books: List[Dict], notification_type: str) -> bool:
+        """
+        Unified method to send book notification emails.
+
+        Args:
+            books: List of book dictionaries
+            notification_type: Type of notification ('discovery', 'reminder', or 'release')
+
+        Returns:
+            True if email sent successfully, False otherwise
+        """
         if not books:
-            logger.info("No new books to report")
+            logger.info(f"No books for {notification_type} notification")
             return True
-        
+
         try:
+            # Get configuration from EmailTemplates
+            config = EmailTemplates.NOTIFICATION_CONFIGS.get(notification_type)
+            if not config:
+                raise ValueError(f"Unknown notification type: {notification_type}")
+
+            # Calculate book count and plural
             book_count = len(books)
             plural = "book" if book_count == 1 else "books"
-            
-            # Create subject based on number of books
-            subject = f"📚 {book_count} new {plural} discovered!"
-            
-            # Create HTML content
-            html_content = EmailTemplates.create_book_discovery_email(books)
-            
-            return self._send_email(subject, html_content, "Book Discovery")
-            
+
+            # Create subject from configuration
+            subject = f"{config['subject_emoji']} {config['subject_template'].format(count=book_count, plural=plural)}"
+
+            # Create HTML content using unified template method
+            html_content = EmailTemplates.create_book_notification_email(books, notification_type)
+
+            # Send email with proper email type for logging
+            email_type_name = {
+                'discovery': 'Book Discovery',
+                'reminder': 'Release Reminder',
+                'release': 'Release Day'
+            }.get(notification_type, notification_type.title())
+
+            return self._send_email(subject, html_content, email_type_name)
+
         except Exception as e:
-            logger.error(f"Failed to send book discovery alert: {e}")
+            logger.error(f"Failed to send {notification_type} notification: {e}")
             return False
+
+    def send_book_discovery_alert(self, books: List[Dict]) -> bool:
+        """Send email notification about newly discovered books"""
+        return self.send_book_notification(books, 'discovery')
     
     def send_release_reminder(self, books: List[Dict]) -> bool:
         """Send email notification for 7-day release reminders"""
-        
-        if not books:
-            logger.info("No release reminders to send")
-            return True
-        
-        try:
-            book_count = len(books)
-            plural = "book" if book_count == 1 else "books"
-            
-            subject = f"📅 {book_count} {plural} releasing in 7 days!"
-            
-            # Create HTML content
-            html_content = EmailTemplates.create_release_reminder_email(books)
-            
-            return self._send_email(subject, html_content, "Release Reminder")
-            
-        except Exception as e:
-            logger.error(f"Failed to send release reminder: {e}")
-            return False
+        return self.send_book_notification(books, 'reminder')
     
     def send_release_day_alert(self, books: List[Dict]) -> bool:
         """Send email notification for books releasing today"""
-        
-        if not books:
-            logger.info("No books releasing today")
-            return True
-        
-        try:
-            book_count = len(books)
-            plural = "book" if book_count == 1 else "books"
-            
-            subject = f"🎉 {book_count} {plural} available now!"
-            
-            # Create HTML content
-            html_content = EmailTemplates.create_release_day_email(books)
-            
-            return self._send_email(subject, html_content, "Release Day")
-            
-        except Exception as e:
-            logger.error(f"Failed to send release day alert: {e}")
-            return False
+        return self.send_book_notification(books, 'release')
     
     def send_tracker_failure_alert(self, error_details: str) -> bool:
         """Send email notification when tracker fails"""
