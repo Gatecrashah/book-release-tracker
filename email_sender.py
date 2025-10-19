@@ -55,12 +55,8 @@ class EmailSender:
             # Create HTML content using unified template method
             html_content = EmailTemplates.create_book_notification_email(books, notification_type)
 
-            # Send email with proper email type for logging
-            email_type_name = {
-                'discovery': 'Book Discovery',
-                'reminder': 'Release Reminder',
-                'release': 'Release Day'
-            }.get(notification_type, notification_type.title())
+            # Get log name from configuration for consistent logging
+            email_type_name = config.get('log_name', notification_type.title())
 
             return self._send_email(subject, html_content, email_type_name)
 

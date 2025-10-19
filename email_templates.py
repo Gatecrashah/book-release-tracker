@@ -21,7 +21,8 @@ class EmailTemplates:
             'css_class': 'new-release',
             'badge_class': 'type-discovery',
             'badge_text': 'NEW DISCOVERY',
-            'icon': '📚'
+            'icon': '📚',
+            'log_name': 'Book Discovery'
         },
         'reminder': {
             'subject_emoji': '📅',
@@ -32,7 +33,8 @@ class EmailTemplates:
             'css_class': 'release-reminder',
             'badge_class': 'type-reminder',
             'badge_text': '7-DAY REMINDER',
-            'icon': '📅'
+            'icon': '📅',
+            'log_name': 'Release Reminder'
         },
         'release': {
             'subject_emoji': '🎉',
@@ -43,7 +45,8 @@ class EmailTemplates:
             'css_class': 'release-day',
             'badge_class': 'type-release',
             'badge_text': 'OUT TODAY!',
-            'icon': '🎉'
+            'icon': '🎉',
+            'log_name': 'Release Day'
         }
     }
 
@@ -110,7 +113,7 @@ class EmailTemplates:
         release_date = book.get('release_date')
         series = book.get('metadata', {}).get('series', '')
         source_url = book.get('source_url', '')
-        
+
         # Format release date
         date_str = ""
         if release_date:
@@ -118,31 +121,13 @@ class EmailTemplates:
                 date_str = release_date
             elif isinstance(release_date, date):
                 date_str = release_date.strftime("%B %d, %Y")
-        
-        # Determine CSS class and icon based on notification type
-        css_class = {
-            'discovery': 'new-release',
-            'reminder': 'release-reminder',
-            'release': 'release-day'
-        }.get(notification_type, 'book')
-        
-        icon = {
-            'discovery': '📚',
-            'reminder': '📅',
-            'release': '🎉'
-        }.get(notification_type, '📖')
-        
-        type_class = {
-            'discovery': 'type-discovery',
-            'reminder': 'type-reminder',
-            'release': 'type-release'
-        }.get(notification_type, 'type-discovery')
-        
-        type_text = {
-            'discovery': 'NEW DISCOVERY',
-            'reminder': '7-DAY REMINDER',
-            'release': 'OUT TODAY!'
-        }.get(notification_type, 'NOTIFICATION')
+
+        # Get configuration from NOTIFICATION_CONFIGS
+        config = cls.NOTIFICATION_CONFIGS.get(notification_type, {})
+        css_class = config.get('css_class', 'book')
+        icon = config.get('icon', '📖')
+        type_class = config.get('badge_class', 'type-discovery')
+        type_text = config.get('badge_text', 'NOTIFICATION')
         
         book_html = f"""
         <div class="book {css_class}">
