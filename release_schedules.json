@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2025-10-28T09:22:20.408197",
+      "last_checked": "2025-10-29T09:21:27.282593",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +28,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2025-10-28T09:22:20.408223",
+      "last_checked": "2025-10-29T09:21:27.282617",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +48,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-10-10T09:21:21.738587",
-      "last_checked": "2025-10-28T09:22:20.408244",
+      "last_checked": "2025-10-29T09:21:27.282638",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -68,7 +68,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335236",
-      "last_checked": "2025-10-28T09:22:20.408263",
+      "last_checked": "2025-10-29T09:21:27.282659",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -88,7 +88,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-08-06T10:07:24.641436",
-      "last_checked": "2025-10-28T09:22:20.408282",
+      "last_checked": "2025-10-29T09:21:27.282679",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -108,7 +108,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-10-21T09:22:24.849945",
-      "last_checked": "2025-10-28T09:22:20.408301",
+      "last_checked": "2025-10-29T09:21:27.282702",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -128,7 +128,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/stephen-hunter",
       "discovery_date": "2025-08-05T14:40:10.096245",
-      "last_checked": "2025-10-28T09:22:20.408331",
+      "last_checked": "2025-10-29T09:21:27.282728",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -156,7 +156,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-08-05T14:40:12.986939",
-      "last_checked": "2025-10-28T09:22:20.408351",
+      "last_checked": "2025-10-29T09:21:27.282748",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -180,7 +180,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2025-08-05T14:40:17.047328",
-      "last_checked": "2025-10-28T09:22:20.408368",
+      "last_checked": "2025-10-29T09:21:27.282765",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -200,7 +200,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335072",
-      "last_checked": "2025-10-28T09:22:20.408384",
+      "last_checked": "2025-10-29T09:21:27.282788",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -213,5 +213,5 @@
       }
     }
   ],
-  "last_updated": "2025-10-28T09:22:20.408468"
+  "last_updated": "2025-10-29T09:21:27.282868"
 }
