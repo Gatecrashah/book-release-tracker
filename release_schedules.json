@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2025-11-03T09:25:51.642588",
+      "last_checked": "2025-11-04T09:23:40.516830",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +28,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2025-11-03T09:25:51.642615",
+      "last_checked": "2025-11-04T09:23:40.516854",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +48,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-10-10T09:21:21.738587",
-      "last_checked": "2025-11-03T09:25:51.642636",
+      "last_checked": "2025-11-04T09:23:40.516875",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -68,11 +68,15 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335236",
-      "last_checked": "2025-11-03T09:25:51.642656",
+      "last_checked": "2025-11-04T09:23:40.516900",
       "notifications_sent": [
         {
           "type": "discovery",
           "date": "2025-08-05T14:50:25.200343"
+        },
+        {
+          "type": "reminder",
+          "date": "2025-11-04T09:23:40.934620"
         }
       ],
       "metadata": {
@@ -88,11 +92,15 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-08-06T10:07:24.641436",
-      "last_checked": "2025-11-03T09:25:51.642675",
+      "last_checked": "2025-11-04T09:23:40.516920",
       "notifications_sent": [
         {
           "type": "discovery",
           "date": "2025-08-06T10:07:25.242773"
+        },
+        {
+          "type": "reminder",
+          "date": "2025-11-04T09:23:40.934632"
         }
       ],
       "metadata": {
@@ -108,7 +116,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-10-21T09:22:24.849945",
-      "last_checked": "2025-11-03T09:25:51.642714",
+      "last_checked": "2025-11-04T09:23:40.516938",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -128,7 +136,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/stephen-hunter",
       "discovery_date": "2025-08-05T14:40:10.096245",
-      "last_checked": "2025-11-03T09:25:51.642740",
+      "last_checked": "2025-11-04T09:23:40.516962",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -156,7 +164,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-08-05T14:40:12.986939",
-      "last_checked": "2025-11-03T09:25:51.642759",
+      "last_checked": "2025-11-04T09:23:40.516985",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -180,7 +188,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2025-08-05T14:40:17.047328",
-      "last_checked": "2025-11-03T09:25:51.642775",
+      "last_checked": "2025-11-04T09:23:40.517001",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -200,7 +208,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335072",
-      "last_checked": "2025-11-03T09:25:51.642791",
+      "last_checked": "2025-11-04T09:23:40.517020",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -213,5 +221,5 @@
       }
     }
   ],
-  "last_updated": "2025-11-03T09:25:51.642879"
+  "last_updated": "2025-11-04T09:23:40.934672"
 }
