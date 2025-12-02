@@ -1,6 +1,50 @@
 {
   "books": [
     {
+      "id": "brandon_sanderson_tailored_realities_2025",
+      "title": "Tailored Realities",
+      "author": "Brandon Sanderson",
+      "release_date": "2025-12-09",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
+      "discovery_date": "2025-08-05T14:40:08.490882",
+      "last_checked": "2025-12-02T09:27:34.596816",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-08-05T14:40:17.486227"
+        },
+        {
+          "type": "reminder",
+          "date": "2025-12-02T09:27:34.843882"
+        }
+      ],
+      "metadata": {
+        "source": "faq_multiple",
+        "confidence": "high"
+      }
+    },
+    {
+      "id": "brandon_sanderson_songs_of_the_2026",
+      "title": "Songs of the Dead",
+      "author": "Brandon Sanderson",
+      "release_date": "2026-06-16",
+      "status": "upcoming",
+      "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
+      "discovery_date": "2025-11-13T09:23:13.812780",
+      "last_checked": "2025-12-02T09:27:34.596834",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2025-11-13T09:23:29.274505"
+        }
+      ],
+      "metadata": {
+        "source": "faq_multiple",
+        "confidence": "high"
+      }
+    },
+    {
       "id": "james_s_the_faith_of_2026",
       "title": "The Faith of Beasts",
       "author": "James S. A. Corey",
@@ -8,7 +52,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2025-12-01T09:31:40.055295",
+      "last_checked": "2025-12-02T09:27:34.596848",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +72,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-10-10T09:21:21.738587",
-      "last_checked": "2025-12-01T09:31:40.055313",
+      "last_checked": "2025-12-02T09:27:34.596866",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +92,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-10-21T09:22:24.849945",
-      "last_checked": "2025-12-01T09:31:40.055326",
+      "last_checked": "2025-12-02T09:27:34.596883",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -61,46 +105,6 @@
       }
     },
     {
-      "id": "brandon_sanderson_tailored_realities_2025",
-      "title": "Tailored Realities",
-      "author": "Brandon Sanderson",
-      "release_date": "2025-12-09",
-      "status": "upcoming",
-      "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
-      "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2025-12-01T09:31:40.055339",
-      "notifications_sent": [
-        {
-          "type": "discovery",
-          "date": "2025-08-05T14:40:17.486227"
-        }
-      ],
-      "metadata": {
-        "source": "faq_multiple",
-        "confidence": "high"
-      }
-    },
-    {
-      "id": "brandon_sanderson_songs_of_the_2026",
-      "title": "Songs of the Dead",
-      "author": "Brandon Sanderson",
-      "release_date": "2026-06-16",
-      "status": "upcoming",
-      "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
-      "discovery_date": "2025-11-13T09:23:13.812780",
-      "last_checked": "2025-12-01T09:31:40.055363",
-      "notifications_sent": [
-        {
-          "type": "discovery",
-          "date": "2025-11-13T09:23:29.274505"
-        }
-      ],
-      "metadata": {
-        "source": "faq_multiple",
-        "confidence": "high"
-      }
-    },
-    {
       "id": "lee_child_exit_strategy_2025",
       "title": "Exit Strategy",
       "author": "Lee Child",
@@ -108,7 +112,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335236",
-      "last_checked": "2025-12-01T09:31:40.055378",
+      "last_checked": "2025-12-02T09:27:34.596901",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -136,7 +140,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-08-06T10:07:24.641436",
-      "last_checked": "2025-12-01T09:31:40.055392",
+      "last_checked": "2025-12-02T09:27:34.596915",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -164,7 +168,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/stephen-hunter",
       "discovery_date": "2025-08-05T14:40:10.096245",
-      "last_checked": "2025-12-01T09:31:40.055405",
+      "last_checked": "2025-12-02T09:27:34.596928",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -192,7 +196,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-08-05T14:40:12.986939",
-      "last_checked": "2025-12-01T09:31:40.055416",
+      "last_checked": "2025-12-02T09:27:34.596940",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -216,7 +220,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2025-08-05T14:40:17.047328",
-      "last_checked": "2025-12-01T09:31:40.055426",
+      "last_checked": "2025-12-02T09:27:34.596950",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -236,7 +240,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335072",
-      "last_checked": "2025-12-01T09:31:40.055436",
+      "last_checked": "2025-12-02T09:27:34.596960",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -249,5 +253,5 @@
       }
     }
   ],
-  "last_updated": "2025-12-01T09:31:40.055495"
+  "last_updated": "2025-12-02T09:27:34.843929"
 }
