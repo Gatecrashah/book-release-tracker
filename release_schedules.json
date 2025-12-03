@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2025-12-02T09:27:34.596816",
+      "last_checked": "2025-12-03T09:25:54.766222",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -32,7 +32,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-11-13T09:23:13.812780",
-      "last_checked": "2025-12-02T09:27:34.596834",
+      "last_checked": "2025-12-03T09:25:54.766252",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -52,7 +52,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2025-12-02T09:27:34.596848",
+      "last_checked": "2025-12-03T09:25:54.766266",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -72,7 +72,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-10-10T09:21:21.738587",
-      "last_checked": "2025-12-02T09:27:34.596866",
+      "last_checked": "2025-12-03T09:25:54.766280",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -92,7 +92,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-10-21T09:22:24.849945",
-      "last_checked": "2025-12-02T09:27:34.596883",
+      "last_checked": "2025-12-03T09:25:54.766292",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -112,7 +112,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335236",
-      "last_checked": "2025-12-02T09:27:34.596901",
+      "last_checked": "2025-12-03T09:25:54.766309",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -140,7 +140,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-08-06T10:07:24.641436",
-      "last_checked": "2025-12-02T09:27:34.596915",
+      "last_checked": "2025-12-03T09:25:54.766324",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -168,7 +168,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/stephen-hunter",
       "discovery_date": "2025-08-05T14:40:10.096245",
-      "last_checked": "2025-12-02T09:27:34.596928",
+      "last_checked": "2025-12-03T09:25:54.766337",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -196,7 +196,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-08-05T14:40:12.986939",
-      "last_checked": "2025-12-02T09:27:34.596940",
+      "last_checked": "2025-12-03T09:25:54.766348",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -220,7 +220,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2025-08-05T14:40:17.047328",
-      "last_checked": "2025-12-02T09:27:34.596950",
+      "last_checked": "2025-12-03T09:25:54.766358",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -240,7 +240,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335072",
-      "last_checked": "2025-12-02T09:27:34.596960",
+      "last_checked": "2025-12-03T09:25:54.766368",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -253,5 +253,5 @@
       }
     }
   ],
-  "last_updated": "2025-12-02T09:27:34.843929"
+  "last_updated": "2025-12-03T09:25:54.766429"
 }
