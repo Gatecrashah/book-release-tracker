@@ -8,6 +8,7 @@ Design: Editorial/Literary Magazine aesthetic with vintage bookstore charm
 
 from typing import Dict, List
 from datetime import datetime, date
+import html
 
 class EmailTemplates:
     """Centralized email template manager for book releases"""
@@ -72,11 +73,12 @@ class EmailTemplates:
             max-width: 600px;
             margin: 0 auto;
             background-color: #FFFDF9;
-            box-shadow: 0 4px 24px rgba(44, 44, 44, 0.08);
+            border: 1px solid #E8E4DC;
         }
 
-        /* Masthead */
+        /* Masthead - solid fallback for email clients that don't support gradients */
         .masthead {
+            background-color: #2C2C2C;
             background: linear-gradient(135deg, #2C2C2C 0%, #3D3D3D 100%);
             padding: 32px 40px;
             text-align: center;
@@ -206,18 +208,14 @@ class EmailTemplates:
             margin-bottom: 12px;
         }
 
-        .book-date {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .book-date-label {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             font-size: 11px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             color: #9B9B9B;
+            display: block;
+            margin-bottom: 4px;
         }
 
         .book-date-value {
@@ -225,6 +223,7 @@ class EmailTemplates:
             font-size: 18px;
             color: #2C2C2C;
             font-weight: normal;
+            display: block;
         }
 
         .book-source {
@@ -335,10 +334,11 @@ class EmailTemplates:
     @classmethod
     def format_book_notification(cls, book: Dict, notification_type: str) -> str:
         """Format individual book notification for email"""
-        title = book.get('title', 'Unknown Title')
-        author = book.get('author', 'Unknown Author')
+        # Escape all user-provided content to prevent XSS
+        title = html.escape(book.get('title', 'Unknown Title'))
+        author = html.escape(book.get('author', 'Unknown Author'))
         release_date = book.get('release_date')
-        series = book.get('metadata', {}).get('series', '')
+        series = html.escape(book.get('metadata', {}).get('series', ''))
         source_url = book.get('source_url', '')
 
         # Format release date
@@ -378,7 +378,7 @@ class EmailTemplates:
         # Add release date
         if date_str:
             book_html += f"""
-                <div class="book-date">
+                <div>
                     <span class="book-date-label">Release Date</span>
                     <span class="book-date-value">{date_str}</span>
                 </div>
@@ -388,11 +388,9 @@ class EmailTemplates:
 
         # Add source link if available
         if source_url:
-            # Truncate long URLs for display
-            display_url = source_url if len(source_url) < 50 else source_url[:47] + "..."
             book_html += f"""
                 <div class="book-source">
-                    <a href="{source_url}" class="book-source-link">View source →</a>
+                    <a href="{html.escape(source_url)}" class="book-source-link">View source →</a>
                 </div>
             """
 
@@ -506,6 +504,8 @@ class EmailTemplates:
         """Create scraper failure alert email HTML"""
 
         current_date = datetime.now().strftime("%B %d, %Y")
+        # Escape error details to prevent XSS
+        safe_error_details = html.escape(error_details)
 
         html_content = f"""
         <!DOCTYPE html>
@@ -538,7 +538,7 @@ class EmailTemplates:
                 <div class="content">
                     <div class="alert-card">
                         <h3 class="alert-title">Error Details</h3>
-                        <div class="alert-code">{error_details}</div>
+                        <div class="alert-code">{safe_error_details}</div>
                     </div>
 
                     <div style="margin-bottom: 24px;">
