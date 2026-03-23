@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-11-13T09:23:13.812780",
-      "last_checked": "2026-03-22T09:34:25.994626",
+      "last_checked": "2026-03-23T10:03:58.388270",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +28,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2026-03-22T09:34:12.843233",
-      "last_checked": "2026-03-22T09:34:12.843235",
+      "last_checked": "2026-03-23T10:03:58.388290",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +48,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2026-03-22T09:34:25.994653",
+      "last_checked": "2026-03-23T10:03:58.388306",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -68,7 +68,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-10-10T09:21:21.738587",
-      "last_checked": "2026-03-22T09:34:25.994681",
+      "last_checked": "2026-03-23T10:03:58.388323",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -94,7 +94,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-02-01T09:32:38.514331",
-      "last_checked": "2026-03-22T09:34:25.994702",
+      "last_checked": "2026-03-23T10:03:58.388336",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -114,7 +114,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2026-01-22T09:34:16.342878",
-      "last_checked": "2026-03-22T09:34:25.994723",
+      "last_checked": "2026-03-23T10:03:58.388349",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -134,7 +134,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-10-21T09:22:24.849945",
-      "last_checked": "2026-03-22T09:34:25.994745",
+      "last_checked": "2026-03-23T10:03:58.388360",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -154,7 +154,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2026-03-22T09:34:25.994772",
+      "last_checked": "2026-03-23T10:03:58.388375",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -182,7 +182,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2025-08-05T14:50:24.335236",
-      "last_checked": "2026-03-22T09:34:25.994799",
+      "last_checked": "2026-03-23T10:03:58.388389",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -210,7 +210,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-08-06T10:07:24.641436",
-      "last_checked": "2026-03-22T09:34:25.994820",
+      "last_checked": "2026-03-23T10:03:58.388402",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -238,7 +238,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/stephen-hunter",
       "discovery_date": "2025-08-05T14:40:10.096245",
-      "last_checked": "2026-03-22T09:34:25.994843",
+      "last_checked": "2026-03-23T10:03:58.388416",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -266,7 +266,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-08-05T14:40:12.986939",
-      "last_checked": "2026-03-22T09:34:25.994863",
+      "last_checked": "2026-03-23T10:03:58.388437",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -281,27 +281,7 @@
         "source": "faq",
         "confidence": "high"
       }
-    },
-    {
-      "id": "jeffrey_archer_end_game_2025",
-      "title": "End Game",
-      "author": "Jeffrey Archer",
-      "release_date": "2025-09-23",
-      "status": "released",
-      "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
-      "discovery_date": "2025-08-05T14:40:17.047328",
-      "last_checked": "2026-03-22T09:34:25.994894",
-      "notifications_sent": [
-        {
-          "type": "discovery",
-          "date": "2025-08-05T14:40:17.486244"
-        }
-      ],
-      "metadata": {
-        "source": "faq",
-        "confidence": "high"
-      }
     }
   ],
-  "last_updated": "2026-03-22T09:34:26.183223"
+  "last_updated": "2026-03-23T10:03:58.388642"
 }
