@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-11-13T09:23:13.812780",
-      "last_checked": "2026-06-02T12:42:22.965753",
+      "last_checked": "2026-06-03T13:17:11.774301",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +28,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2026-03-22T09:34:12.843233",
-      "last_checked": "2026-06-02T12:42:22.965775",
+      "last_checked": "2026-06-03T13:17:11.774323",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +48,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2026-04-19T09:49:16.143697",
-      "last_checked": "2026-06-02T12:42:22.965791",
+      "last_checked": "2026-06-03T13:17:11.774339",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -68,7 +68,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-02-01T09:32:38.514331",
-      "last_checked": "2026-06-02T12:42:22.965805",
+      "last_checked": "2026-06-03T13:17:11.774353",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -88,7 +88,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2026-01-22T09:34:16.342878",
-      "last_checked": "2026-06-02T12:42:22.965818",
+      "last_checked": "2026-06-03T13:17:11.774367",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -108,7 +108,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-04-21T10:18:52.239614",
-      "last_checked": "2026-06-02T12:42:22.965836",
+      "last_checked": "2026-06-03T13:17:11.774385",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -134,7 +134,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-10-10T09:21:21.738587",
-      "last_checked": "2026-06-02T12:42:22.965856",
+      "last_checked": "2026-06-03T13:17:11.774404",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -168,7 +168,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-04-05T09:40:28.049765",
-      "last_checked": "2026-06-02T12:42:22.965869",
+      "last_checked": "2026-06-03T13:17:11.774419",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -188,7 +188,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2026-06-02T12:42:22.965884",
+      "last_checked": "2026-06-03T13:17:11.774435",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -216,7 +216,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-10-21T09:22:24.849945",
-      "last_checked": "2026-06-02T12:42:22.965897",
+      "last_checked": "2026-06-03T13:17:11.774448",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -244,7 +244,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-08-05T14:40:08.490882",
-      "last_checked": "2026-06-02T12:42:22.965912",
+      "last_checked": "2026-06-03T13:17:11.774462",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -265,5 +265,5 @@
       }
     }
   ],
-  "last_updated": "2026-06-02T12:42:22.965978"
+  "last_updated": "2026-06-03T13:17:11.774525"
 }
