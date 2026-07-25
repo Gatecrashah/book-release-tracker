@@ -24,6 +24,7 @@ Automated book release tracker that monitors your favorite authors for new book 
 - Lee Child
 - Jeffrey Archer
 - David Baldacci
+- Michael Connelly
 
 ## 🏗️ Architecture
 
