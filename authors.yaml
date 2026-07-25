@@ -35,3 +35,7 @@ authors:
   - name: "David Baldacci"
     book_notification_id: "david-baldacci"
     status: "active"
+
+  - name: "Michael Connelly"
+    book_notification_id: "michael-connelly"
+    status: "active"
