@@ -8,7 +8,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2026-03-22T09:34:12.843233",
-      "last_checked": "2026-08-22T09:26:51.036872",
+      "last_checked": "2026-08-23T09:27:43.129124",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -28,7 +28,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2026-04-19T09:49:16.143697",
-      "last_checked": "2026-08-22T09:26:51.036890",
+      "last_checked": "2026-08-23T09:27:43.129146",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -48,7 +48,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2026-06-14T11:30:54.265957",
-      "last_checked": "2026-08-22T09:26:51.036907",
+      "last_checked": "2026-08-23T09:27:43.129164",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -74,7 +74,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-02-01T09:32:38.514331",
-      "last_checked": "2026-08-22T09:26:51.036919",
+      "last_checked": "2026-08-23T09:27:43.129180",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -94,7 +94,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-07-28T11:17:28.984119",
-      "last_checked": "2026-08-22T09:26:51.036929",
+      "last_checked": "2026-08-23T09:27:43.129193",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -114,7 +114,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/jeffrey-archer",
       "discovery_date": "2026-01-22T09:34:16.342878",
-      "last_checked": "2026-08-22T09:26:51.036941",
+      "last_checked": "2026-08-23T09:27:43.129207",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -134,7 +134,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-04-21T10:18:52.239614",
-      "last_checked": "2026-08-22T09:26:51.036953",
+      "last_checked": "2026-08-23T09:27:43.129224",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -160,7 +160,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-08-21T09:36:39.184420",
-      "last_checked": "2026-08-22T09:26:51.036962",
+      "last_checked": "2026-08-23T09:27:43.129237",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -180,7 +180,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/michael-connelly",
       "discovery_date": "2026-07-25T12:18:30.410555",
-      "last_checked": "2026-08-22T09:26:51.036971",
+      "last_checked": "2026-08-23T09:27:43.129250",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -200,7 +200,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/brandon-sanderson",
       "discovery_date": "2025-11-13T09:23:13.812780",
-      "last_checked": "2026-08-22T09:26:51.036986",
+      "last_checked": "2026-08-23T09:27:43.129266",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -228,7 +228,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2025-10-10T09:21:21.738587",
-      "last_checked": "2026-08-22T09:26:51.037001",
+      "last_checked": "2026-08-23T09:27:43.129285",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -262,7 +262,7 @@
       "status": "upcoming",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-04-05T09:40:28.049765",
-      "last_checked": "2026-08-22T09:26:51.037009",
+      "last_checked": "2026-08-23T09:27:43.129296",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -282,7 +282,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/james-s-a-corey",
       "discovery_date": "2025-08-05T14:40:11.598205",
-      "last_checked": "2026-08-22T09:26:51.037021",
+      "last_checked": "2026-08-23T09:27:43.129311",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -310,7 +310,7 @@
       "status": "released",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2025-10-21T09:22:24.849945",
-      "last_checked": "2026-08-22T09:26:51.037033",
+      "last_checked": "2026-08-23T09:27:43.129325",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -331,5 +331,5 @@
       }
     }
   ],
-  "last_updated": "2026-08-22T09:26:51.037088"
+  "last_updated": "2026-08-23T09:27:43.129394"
 }
