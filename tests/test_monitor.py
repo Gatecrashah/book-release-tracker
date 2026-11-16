@@ -27,6 +27,9 @@ class FakeMail:
     def send_book_discovery_alert(self, books):
         self._send("discovery", [b["title"] for b in books])
 
+    def send_date_change_alert(self, books):
+        self._send("date_change", [(b["title"], b["previous_release_date"], str(b["release_date"])) for b in books])
+
     def send_release_reminder(self, books):
         self._send("reminder", [b["title"] for b in books])
 
@@ -161,6 +164,10 @@ def test_date_change_across_a_year_boundary_updates_the_same_book(monitor):
     listed(monitor, [("Zero Margin", date(2027, 2, 1))])
     monitor.run_monitoring_cycle()
 
+    assert monitor.email_sender.sent == [
+        ("discovery", ["Zero Margin"]),
+        ("date_change", [("Zero Margin", "2026-12-15", "2027-02-01")]),
+    ]
     [book] = saved(monitor)
     assert book["release_date"] == "2027-02-01"
     assert [n["type"] for n in book["notifications_sent"]] == ["discovery", "date_change"]

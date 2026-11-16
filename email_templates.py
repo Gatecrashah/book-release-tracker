@@ -7,7 +7,7 @@ Design: Editorial/Literary Magazine aesthetic with vintage bookstore charm
 """
 
 from typing import Dict, List
-from datetime import datetime, date
+from datetime import datetime
 import html
 
 class EmailTemplates:
@@ -26,6 +26,18 @@ class EmailTemplates:
             'badge_text': 'NEW DISCOVERY',
             'icon': '◆',
             'log_name': 'Book Discovery'
+        },
+        'date_change': {
+            'subject_emoji': '🗓️',
+            'subject_template': 'Release date changed for {count} {plural}',
+            'header_title': 'Date Changed',
+            'header_subtitle': '{count} {plural} rescheduled',
+            'footer_message': 'Adjust your calendar.',
+            'accent_color': '#2F4A6B',  # Slate blue
+            'accent_light': '#EAF0F6',
+            'badge_text': 'NEW DATE',
+            'icon': '◈',
+            'log_name': 'Date Change'
         },
         'reminder': {
             'subject_emoji': '📅',
@@ -322,26 +334,27 @@ class EmailTemplates:
         }
         """
 
+    @staticmethod
+    def _format_date(value) -> str:
+        """Format a date, or an ISO date string as stored in the schedules file, for display."""
+        if not value:
+            return ""
+        if isinstance(value, str):
+            try:
+                value = datetime.strptime(value, "%Y-%m-%d")
+            except ValueError:
+                return html.escape(value)
+        return f"{value:%B} {value.day}, {value.year}"
+
     @classmethod
     def format_book_notification(cls, book: Dict, notification_type: str) -> str:
         """Format individual book notification for email"""
         # Escape all user-provided content to prevent XSS
         title = html.escape(book.get('title', 'Unknown Title'))
         author = html.escape(book.get('author', 'Unknown Author'))
-        release_date = book.get('release_date')
         source_url = book.get('source_url', '')
-
-        # Format release date
-        date_str = ""
-        if release_date:
-            if isinstance(release_date, str):
-                try:
-                    parsed_date = datetime.strptime(release_date, "%Y-%m-%d")
-                    date_str = parsed_date.strftime("%B %d, %Y")
-                except ValueError:
-                    date_str = release_date
-            elif isinstance(release_date, date):
-                date_str = release_date.strftime("%B %d, %Y")
+        date_str = cls._format_date(book.get('release_date'))
+        previous_date_str = cls._format_date(book.get('previous_release_date'))
 
         # Get configuration from NOTIFICATION_CONFIGS
         config = cls.NOTIFICATION_CONFIGS.get(notification_type, {})
@@ -370,6 +383,14 @@ class EmailTemplates:
                 </div>
             """
 
+        if previous_date_str:
+            book_html += f"""
+                <div style="margin-top: 12px;">
+                    <span class="book-date-label">Previously</span>
+                    <span class="book-date-value" style="font-size: 15px; color: #9B9B9B; text-decoration: line-through;">{previous_date_str}</span>
+                </div>
+            """
+
         book_html += '</div>'  # Close book-meta
 
         # Add source link if available
@@ -394,7 +415,7 @@ class EmailTemplates:
 
         Args:
             books: List of book dictionaries
-            notification_type: Type of notification ('discovery', 'reminder', or 'release')
+            notification_type: A key of NOTIFICATION_CONFIGS
 
         Returns:
             HTML string for the email

@@ -254,11 +254,14 @@ class BookMonitor:
             for book in new_discoveries:
                 self._record_notification(schedules, book['id'], 'discovery')
         
-        # Date change notifications (treat as new discovery)
+        # Date change notifications
         if date_changes:
-            changed_books = [change['book'] for change in date_changes]
+            changed_books = [
+                {**change['book'], 'previous_release_date': change['old_date']}
+                for change in date_changes
+            ]
             logger.info(f"Sending date change notifications for {len(changed_books)} books")
-            self.email_sender.send_book_discovery_alert(changed_books)
+            self.email_sender.send_date_change_alert(changed_books)
             for change in date_changes:
                 self._record_notification(
                     schedules,

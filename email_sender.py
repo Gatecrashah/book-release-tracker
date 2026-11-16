@@ -30,7 +30,7 @@ class EmailSender:
 
         Args:
             books: List of book dictionaries
-            notification_type: Type of notification ('discovery', 'reminder', or 'release')
+            notification_type: A key of EmailTemplates.NOTIFICATION_CONFIGS
 
         Raises:
             ValueError: for an unknown notification type
@@ -54,6 +54,10 @@ class EmailSender:
     def send_book_discovery_alert(self, books: List[Dict]) -> None:
         """Send email notification about newly discovered books"""
         self.send_book_notification(books, 'discovery')
+
+    def send_date_change_alert(self, books: List[Dict]) -> None:
+        """Send email notification about changed release dates; each book carries 'previous_release_date'"""
+        self.send_book_notification(books, 'date_change')
 
     def send_release_reminder(self, books: List[Dict]) -> None:
         """Send email notification for release reminders"""

@@ -79,9 +79,10 @@ source .env && uv run python email_sender.py
 ## 📧 Email Notifications
 
 ### Notification Types
-1. **New Discovery** (also sent when a release date changes): "📚 1 new book discovered!"
-2. **Release Reminder**: "📅 1 book releasing within a week!"
-3. **Available Now**: "🎉 1 book available now!"
+1. **New Discovery**: "📚 1 new book discovered!"
+2. **Date Changed** (shows the old and new date): "🗓️ Release date changed for 1 book"
+3. **Release Reminder**: "📅 1 book releasing within a week!"
+4. **Available Now**: "🎉 1 book available now!"
 
 A reminder is sent once in the week before release, and skipped if another email about the
 book already went out that week. A release alert is sent once, on release day or up to three
@@ -95,7 +96,7 @@ New Discovery
 NEW DISCOVERY
 Tailored Realities
 by Brandon Sanderson
-Release Date: December 09, 2025
+Release Date: December 9, 2025
 ```
 
 ## 🤖 Automation
