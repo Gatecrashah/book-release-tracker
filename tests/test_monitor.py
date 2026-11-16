@@ -11,7 +11,8 @@ from book_monitor import BookMonitor
 
 AUTHOR = "Lee Child"
 URL = "https://example.test/authors/lee-child"
-RELEASE = date(2027, 3, 23)
+# Relative to today, so the cycle tests never drift into a reminder or release window.
+RELEASE = date.today() + timedelta(days=200)
 
 
 class FakeMail:
@@ -105,7 +106,7 @@ def test_new_book_is_announced_once(monitor):
 
     assert monitor.email_sender.sent == [("discovery", ["Zero Margin"])]
     [book] = saved(monitor)
-    assert book["release_date"] == "2027-03-23"
+    assert book["release_date"] == RELEASE.isoformat()
     assert [n["type"] for n in book["notifications_sent"]] == ["discovery"]
 
 
@@ -158,20 +159,21 @@ def test_book_stored_under_the_old_id_scheme_is_recognised(monitor):
     assert [b["id"] for b in saved(monitor)] == ["lee_child_zero_margin"]
 
 
-def test_date_change_across_a_year_boundary_updates_the_same_book(monitor):
-    listed(monitor, [("Zero Margin", date(2026, 12, 15))])
+def test_date_change_into_another_year_updates_the_same_book(monitor):
+    moved = RELEASE + timedelta(days=400)
+    listed(monitor, [("Zero Margin", RELEASE)])
     monitor.run_monitoring_cycle()
-    listed(monitor, [("Zero Margin", date(2027, 2, 1))])
+    listed(monitor, [("Zero Margin", moved)])
     monitor.run_monitoring_cycle()
 
     assert monitor.email_sender.sent == [
         ("discovery", ["Zero Margin"]),
-        ("date_change", [("Zero Margin", "2026-12-15", "2027-02-01")]),
+        ("date_change", [("Zero Margin", RELEASE.isoformat(), moved.isoformat())]),
     ]
     [book] = saved(monitor)
-    assert book["release_date"] == "2027-02-01"
+    assert book["release_date"] == moved.isoformat()
     assert [n["type"] for n in book["notifications_sent"]] == ["discovery", "date_change"]
-    assert book["notifications_sent"][1]["old_date"] == "2026-12-15"
+    assert book["notifications_sent"][1]["old_date"] == RELEASE.isoformat()
 
 
 def test_book_listed_twice_in_one_scrape_is_stored_and_announced_once(monitor):
