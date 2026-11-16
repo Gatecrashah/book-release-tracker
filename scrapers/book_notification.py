@@ -145,10 +145,8 @@ class BookNotificationScraper:
             'title': title,
             'author': author,
             'release_date': release_date,
-            'status': 'upcoming',
             'source_url': source_url,
             'discovery_date': datetime.now().isoformat(),
             'last_checked': datetime.now().isoformat(),
             'notifications_sent': [],
-            'metadata': {'source': 'faq'}
         }

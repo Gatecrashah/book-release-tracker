@@ -8,10 +8,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Install dependencies
 uv sync
 
+# Run the tests (offline: saved pages, faked email)
+uv run pytest
+
 # Run local testing with environment variables
 source .env && uv run python book_monitor.py
 
-# Test specific author scraper
+# Scrape a few authors live and print what was found
 uv run python test_scraper.py
 
 # Test email functionality
@@ -25,21 +28,35 @@ This is an automated book release tracker that monitors favorite authors and sen
 ### Core Components
 
 - **BookMonitor** (`book_monitor.py`): Main orchestrator that coordinates scraping, change detection, and notifications
-- **BaseBookScraper** (`scrapers/base_book_scraper.py`): Abstract base class defining scraper interface with common HTTP handling and data normalization
-- **BookNotificationScraper** (`scrapers/book_notification.py`): Primary scraper that extracts book release data from BookNotification.com FAQ sections using regex patterns
+- **BookNotificationScraper** (`scrapers/book_notification.py`): Fetches BookNotification.com author pages and extracts upcoming releases from the "Are there upcoming new books by ..." FAQ answer
 - **EmailSender** (`email_sender.py`): Handles all email notifications via Resend API with HTML templates
 
 ### Data Flow
 
 1. **Configuration**: Authors defined in `authors.yaml` with Book Notification IDs
-2. **Scraping**: FAQ-based extraction using regex pattern `"has a new book coming out on DATE called TITLE"`
+2. **Scraping**: Each `<em>` in the FAQ answer is a title; the date is in the text next to it
 3. **Storage**: Book release data persisted in `release_schedules.json` (auto-managed by GitHub Actions)
-4. **Notifications**: New discoveries, 7-day reminders, and release day alerts sent via email
+4. **Notifications**: New discoveries, date changes, a reminder in the week before release, and a release alert
 5. **Cleanup**: Automatic removal of releases older than 6 months
 
 ### Scraping Strategy
 
-The scraper targets FAQ sections on Book Notification author pages that contain the pattern "Author has a new book coming out on DATE called TITLE". This approach provides more reliable data than table parsing and directly answers the core question about upcoming releases.
+The FAQ answer has three forms, all covered by fixtures in `tests/fixtures/`:
+
+- one book: `Author has a new book coming out on DATE called <em>TITLE</em>.`
+- several: `Author has N new books coming out: <em>TITLE</em> will be released on DATE. ...`
+- none: `Author does not have any upcoming books with a set publication date ...`
+
+Some author pages have no such FAQ entry, which also means nothing is upcoming.
+
+The scraper raises when a page fits none of these, rather than returning an empty list: "no upcoming books" must be something the page says, never the result of a failed parse. When the site changes, save the new page into `tests/fixtures/` (trimmed to headings and FAQ blocks) and update the parser against it.
+
+### Failure Handling
+
+- A scrape failure for one author does not stop the others; the run saves state, then fails.
+- A failed email fails the run without saving state, so the next run retries it.
+- `last_checked` is only updated when a book appears in a scrape. Books not seen for more than 3 days get no reminder or release alert (they were withdrawn or renamed at the source).
+- Reminders and release alerts are due inside a window, not on one exact day, so a missed run is caught up.
 
 ## Key Implementation Details
 
@@ -65,15 +82,14 @@ authors:
 ### Local Development Workflow
 
 1. Create `.env` file with required environment variables (see `.env.example`)
-2. Use `test_scraper.py` for iterative scraper development and validation
+2. Change the parser against the fixtures with `uv run pytest`; use `test_scraper.py` to compare with the live site
 3. Test email functionality before deploying changes
 4. Never commit sensitive data - `.env` is gitignored
 
 ### Data Management
 
-- `release_schedules.json` should be reset to empty `{"books": [], "last_updated": "..."}` when scraper logic changes significantly
 - The system automatically handles deduplication and tracks notification history
-- Book IDs are generated from normalized titles and authors to prevent duplicates
+- Book IDs are the normalised author name and full title, and are recomputed when the file is loaded. The release date is not part of the ID, so a date change keeps the same book.
 
 ### Important: release_schedules.json Handling
 

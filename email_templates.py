@@ -199,15 +199,6 @@ class EmailTemplates:
             margin-top: 20px;
         }
 
-        .book-series {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            font-size: 12px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #8B6914;
-            margin-bottom: 12px;
-        }
-
         .book-date-label {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             font-size: 11px;
@@ -338,7 +329,6 @@ class EmailTemplates:
         title = html.escape(book.get('title', 'Unknown Title'))
         author = html.escape(book.get('author', 'Unknown Author'))
         release_date = book.get('release_date')
-        series = html.escape(book.get('metadata', {}).get('series', ''))
         source_url = book.get('source_url', '')
 
         # Format release date
@@ -370,10 +360,6 @@ class EmailTemplates:
 
         # Meta section
         book_html += '<div class="book-meta">'
-
-        # Add series if available
-        if series:
-            book_html += f'<div class="book-series">◆ {series}</div>'
 
         # Add release date
         if date_str:
@@ -483,21 +469,6 @@ class EmailTemplates:
         """
 
         return html_content
-
-    @classmethod
-    def create_book_discovery_email(cls, books: List[Dict]) -> str:
-        """Create email for newly discovered book releases"""
-        return cls.create_book_notification_email(books, 'discovery')
-
-    @classmethod
-    def create_release_reminder_email(cls, books: List[Dict]) -> str:
-        """Create email for release reminders"""
-        return cls.create_book_notification_email(books, 'reminder')
-
-    @classmethod
-    def create_release_day_email(cls, books: List[Dict]) -> str:
-        """Create email for release day notifications"""
-        return cls.create_book_notification_email(books, 'release')
 
     @classmethod
     def create_failure_alert_email(cls, error_details: str) -> str:

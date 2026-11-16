@@ -5,11 +5,13 @@ Automated book release tracker that monitors your favorite authors for new book 
 ## 🎯 Features
 
 - **Automated Daily Monitoring**: Checks for new releases every day at 9:00 AM UTC
-- **Smart Notifications**: 
+- **Smart Notifications**:
   - New book discoveries
-  - Release date changes  
-  - 7-day release reminders
-  - Release day alerts
+  - Release date changes
+  - A reminder in the week before release
+  - An alert when the book is out
+- **Catches Up**: A skipped or failed run does not lose a reminder or release alert; the next run sends it
+- **Fails Loudly**: An unreachable or unrecognised author page, a failed email or a corrupt data file fails the run
 - **Multi-Author Support**: Track multiple authors simultaneously
 - **Centralized Data Source**: Uses Book Notification for reliable release data
 - **Email Integration**: Beautiful HTML emails via Resend API
@@ -31,16 +33,19 @@ Automated book release tracker that monitors your favorite authors for new book 
 ```
 book-release-tracker/
 ├── scrapers/
-│   ├── base_book_scraper.py      # Abstract base for all scrapers
-│   ├── book_notification.py      # Primary scraper for BookNotification.com
+│   ├── book_notification.py      # Scraper for BookNotification.com author pages
 │   └── __init__.py
+├── tests/
+│   ├── fixtures/                 # Trimmed copies of real author pages
+│   ├── test_scraper_parsing.py   # Parser tests against the fixtures
+│   └── test_monitor.py           # Monitoring cycle and alert timing
 ├── book_monitor.py               # Main orchestration
 ├── email_sender.py               # Resend API email notifications
 ├── email_templates.py            # HTML email templates
 ├── authors.yaml                  # Author tracking configuration
 ├── release_schedules.json        # Book release data (auto-managed)
 └── .github/workflows/
-    └── book_monitor.yml          # Weekly GitHub Actions workflow
+    └── book_monitor.yml          # Daily GitHub Actions workflow
 ```
 
 ## ⚙️ Setup
@@ -74,19 +79,23 @@ source .env && uv run python email_sender.py
 ## 📧 Email Notifications
 
 ### Notification Types
-1. **New Discovery**: "📚 New Book Alert: [Author] - [Title] (Release: [Date])"
-2. **7-Day Warning**: "📅 Reminder: [Title] by [Author] releases in 7 days!"  
-3. **Release Day**: "🎉 Available Now: [Title] by [Author] is out today!"
+1. **New Discovery** (also sent when a release date changes): "📚 1 new book discovered!"
+2. **Release Reminder**: "📅 1 book releasing within a week!"
+3. **Available Now**: "🎉 1 book available now!"
+
+A reminder is sent once in the week before release, and skipped if another email about the
+book already went out that week. A release alert is sent once, on release day or up to three
+days after. Books the source stopped listing more than three days ago get neither.
 
 ### Sample Email
 ```html
-📚 New Book Alert!
-1 new book discovered from your favorite authors
+New Discovery
+1 new book from your favorite authors
 
-📚 Tailored Realities
+NEW DISCOVERY
+Tailored Realities
 by Brandon Sanderson
-📖 Series: Standalone Collection
-📅 Release Date: December 9, 2025
+Release Date: December 09, 2025
 ```
 
 ## 🤖 Automation
@@ -124,6 +133,9 @@ To find the `book_notification_id`:
 ## 🛠️ Local Testing
 
 ```bash
+# Run the test suite (no network, no emails)
+uv run pytest
+
 # Test email configuration
 source .env && uv run python email_sender.py
 
@@ -144,7 +156,7 @@ source .env && uv run python book_monitor.py
 - GitHub Actions logs available in repository
 - Local logs saved to `book_monitor.log`
 - Email delivery tracking via Resend dashboard
-- Automatic failure alerts sent to your email
+- A failed run exits non-zero, so GitHub marks it red, and a failure alert email is attempted
 
 ## 🔧 Troubleshooting
 
@@ -165,7 +177,7 @@ source .env && uv run python email_sender.py
 **"Scraper failing"**
 - Check GitHub Actions logs
 - Verify Book Notification site accessibility
-- Update scraper selectors if site structure changed
+- If the page format changed, refresh `tests/fixtures/` from the live page and update the parser
 
 ### Debug Mode
 ```bash

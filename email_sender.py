@@ -104,11 +104,7 @@ def main():
             'title': 'Tailored Realities',
             'author': 'Brandon Sanderson',
             'release_date': '2025-12-09',
-            'source_url': 'https://www.booknotification.com/authors/brandon-sanderson',
-            'metadata': {
-                'series': 'Standalone Collection',
-                'publisher': 'Tor Books'
-            }
+            'source_url': 'https://www.booknotification.com/authors/brandon-sanderson'
         }
     ]
 

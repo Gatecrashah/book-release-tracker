@@ -45,8 +45,7 @@ class BookMonitor:
             # Load configuration
             authors = self.load_authors()
             if not authors:
-                logger.error("No authors found in configuration")
-                return False
+                raise ValueError(f"No authors found in {self.authors_file}")
             
             # Load existing release schedules
             existing_schedules = self.load_release_schedules()
@@ -119,20 +118,10 @@ class BookMonitor:
     
     def load_authors(self) -> List[Dict]:
         """Load author configuration from YAML file."""
-        
-        try:
-            if not os.path.exists(self.authors_file):
-                logger.error(f"Authors file not found: {self.authors_file}")
-                return []
-            
-            with open(self.authors_file, 'r', encoding='utf-8') as file:
-                data = yaml.safe_load(file)
-                return data.get('authors', [])
-                
-        except Exception as e:
-            logger.error(f"Error loading authors: {e}")
-            return []
-    
+
+        with open(self.authors_file, 'r', encoding='utf-8') as file:
+            return yaml.safe_load(file).get('authors', [])
+
     def load_release_schedules(self) -> Dict:
         """Load existing release schedules from JSON file."""
         
@@ -144,8 +133,11 @@ class BookMonitor:
             schedules = json.load(file)
 
         # IDs are derived from author and title, so files written with an older ID scheme still match.
+        # 'status' and 'metadata' were stored by earlier versions and never read.
         for book in schedules.get('books', []):
             book['id'] = self.scraper.generate_book_id(book['title'], book['author'])
+            book.pop('status', None)
+            book.pop('metadata', None)
         return schedules
 
     def save_release_schedules(self, schedules: Dict) -> None:
@@ -225,19 +217,6 @@ class BookMonitor:
             logger.warning(f"Could not parse date value: {date_value} - {e}")
             return None
 
-    def _update_book_status(self, book: Dict) -> None:
-        """Update book status based on release date."""
-
-        release_date = book.get('release_date')
-        release_date_obj = self._parse_date_field(release_date)
-
-        if release_date_obj:
-            if release_date_obj <= date.today():
-                book['status'] = 'released'
-            else:
-                book['status'] = 'upcoming'
-        # If release_date_obj is None, keep existing status unchanged
-
     def update_release_schedules(self, existing_schedules: Dict, new_books: List[Dict]) -> Dict:
         """Merge freshly scraped books into the stored schedules, matching on book ID."""
 
@@ -253,17 +232,12 @@ class BookMonitor:
                     'release_date': new_book['release_date'],
                     'source_url': new_book['source_url'],
                     'last_checked': datetime.now().isoformat(),
-                    'metadata': {**existing.get('metadata', {}), **new_book.get('metadata', {})}
                 })
             else:
                 books_by_id[new_book['id']] = new_book
 
-        final_books = list(books_by_id.values())
-        for book in final_books:
-            self._update_book_status(book)
-
         return {
-            'books': final_books,
+            'books': list(books_by_id.values()),
             'last_updated': datetime.now().isoformat()
         }
 
