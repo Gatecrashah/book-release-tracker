@@ -105,33 +105,15 @@ class BaseBookScraper(ABC):
             logger.debug(f"Error extracting JSON-LD: {e}")
             return None
     
-    def generate_book_id(self, title: str, author: str, release_date: str = "") -> str:
+    def generate_book_id(self, title: str, author: str) -> str:
         """
-        Generate a unique identifier for a book.
-        
-        Args:
-            title: Book title
-            author: Author name
-            release_date: Release date string
-            
-        Returns:
-            Unique string identifier for the book
+        Generate the identifier for a book: the full author name and title, normalised.
+
+        The release date is deliberately not part of it, so a date change keeps the same ID.
         """
-        # Clean title and author for ID generation
-        clean_title = re.sub(r'[^a-zA-Z0-9\s]', '', title.lower())
-        clean_author = re.sub(r'[^a-zA-Z0-9\s]', '', author.lower())
-        clean_date = re.sub(r'[^0-9]', '', release_date)
-        
-        # Create ID from cleaned strings
-        title_part = '_'.join(clean_title.split()[:3])  # First 3 words
-        author_part = '_'.join(clean_author.split()[:2])  # First 2 words
-        
-        book_id = f"{author_part}_{title_part}"
-        if clean_date:
-            book_id += f"_{clean_date[:4]}"  # Add year
-            
-        return book_id
-    
+        words = re.sub(r'[^\w\s]', '', f"{author} {title}".lower()).split()
+        return '_'.join(words)
+
     def normalize_book_data(self, raw_data: Dict) -> Dict:
         """
         Normalize book data into standard format.
@@ -142,10 +124,13 @@ class BaseBookScraper(ABC):
         Returns:
             Normalized book data dictionary
         """
-        normalized = {
-            'id': raw_data.get('id', ''),
-            'title': raw_data.get('title', '').strip(),
-            'author': raw_data.get('author', '').strip(),
+        title = raw_data.get('title', '').strip()
+        author = raw_data.get('author', '').strip()
+
+        return {
+            'id': self.generate_book_id(title, author),
+            'title': title,
+            'author': author,
             'release_date': raw_data.get('release_date'),
             'status': raw_data.get('status', 'upcoming'),
             'source_url': raw_data.get('source_url', ''),
@@ -154,17 +139,7 @@ class BaseBookScraper(ABC):
             'notifications_sent': [],
             'metadata': raw_data.get('metadata', {})
         }
-        
-        # Generate ID if not provided
-        if not normalized['id']:
-            normalized['id'] = self.generate_book_id(
-                normalized['title'],
-                normalized['author'],
-                str(normalized['release_date']) if normalized['release_date'] else ""
-            )
-            
-        return normalized
-    
+
     def scrape_page(self, url: str, timeout: int = 30) -> BeautifulSoup:
         """
         Scrape a web page and return BeautifulSoup object.

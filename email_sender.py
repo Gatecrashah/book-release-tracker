@@ -56,7 +56,7 @@ class EmailSender:
         self.send_book_notification(books, 'discovery')
 
     def send_release_reminder(self, books: List[Dict]) -> None:
-        """Send email notification for 7-day release reminders"""
+        """Send email notification for release reminders"""
         self.send_book_notification(books, 'reminder')
 
     def send_release_day_alert(self, books: List[Dict]) -> None:

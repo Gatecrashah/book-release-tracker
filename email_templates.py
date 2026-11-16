@@ -29,13 +29,13 @@ class EmailTemplates:
         },
         'reminder': {
             'subject_emoji': '📅',
-            'subject_template': '{count} {plural} releasing in 7 days!',
+            'subject_template': '{count} {plural} releasing within a week!',
             'header_title': 'Release Reminder',
-            'header_subtitle': '{count} {plural} arriving in just 7 days',
+            'header_subtitle': '{count} {plural} arriving within a week',
             'footer_message': 'Mark your calendar.',
             'accent_color': '#8B6914',  # Amber gold
             'accent_light': '#FBF6E9',
-            'badge_text': '7 DAYS',
+            'badge_text': 'THIS WEEK',
             'icon': '◇',
             'log_name': 'Release Reminder'
         },
@@ -47,7 +47,7 @@ class EmailTemplates:
             'footer_message': 'Happy reading.',
             'accent_color': '#8B1538',  # Burgundy
             'accent_light': '#FAF0F2',
-            'badge_text': 'OUT TODAY',
+            'badge_text': 'OUT NOW',
             'icon': '★',
             'log_name': 'Release Day'
         }
@@ -491,7 +491,7 @@ class EmailTemplates:
 
     @classmethod
     def create_release_reminder_email(cls, books: List[Dict]) -> str:
-        """Create email for 7-day release reminders"""
+        """Create email for release reminders"""
         return cls.create_book_notification_email(books, 'reminder')
 
     @classmethod

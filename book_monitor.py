@@ -23,6 +23,10 @@ logger = logging.getLogger(__name__)
 # The window absorbs a few failed scrapes and the source dropping a book on release day.
 STALE_AFTER = timedelta(days=3)
 
+# Alerts are due anywhere inside these windows, so a skipped or failed run is caught up by the next one.
+REMINDER_WINDOW = timedelta(days=7)
+RELEASE_ALERT_WINDOW = timedelta(days=3)
+
 class BookMonitor:
     """Main book release monitoring coordinator."""
     
@@ -63,33 +67,26 @@ class BookMonitor:
                     continue
                 all_discovered_books.extend(books)
 
-            # Process discovered books (only if any were found)
+            existing_by_id = {book['id']: book for book in existing_schedules.get('books', [])}
+            scraped_by_id = {book['id']: book for book in all_discovered_books}
+
             new_discoveries = []
             date_changes = []
+            for book_id, book in scraped_by_id.items():
+                existing_book = existing_by_id.get(book_id)
+                if not existing_book:
+                    new_discoveries.append(book)
+                    logger.info(f"New book discovered: {book['title']} by {book['author']}")
+                elif self.has_date_changed(book, existing_book):
+                    date_changes.append({
+                        'book': book,
+                        'old_date': existing_book.get('release_date'),
+                        'new_date': book.get('release_date')
+                    })
+                    logger.info(f"Release date changed for: {book['title']}")
 
-            if all_discovered_books:
-                for book in all_discovered_books:
-                    existing_book = self.find_existing_book(book, existing_schedules)
-
-                    if not existing_book:
-                        # New book discovery
-                        new_discoveries.append(book)
-                        logger.info(f"New book discovered: {book['title']} by {book['author']}")
-                    else:
-                        # Check for date changes
-                        if self.has_date_changed(book, existing_book):
-                            date_changes.append({
-                                'book': book,
-                                'old_date': existing_book.get('release_date'),
-                                'new_date': book.get('release_date')
-                            })
-                            logger.info(f"Release date changed for: {book['title']}")
-            else:
-                logger.info("No books discovered from any authors during scraping")
-
-            # Update release schedules with all books (even if scraping found nothing)
             updated_schedules = self.update_release_schedules(
-                existing_schedules, all_discovered_books
+                existing_schedules, list(scraped_by_id.values())
             )
 
             # Send notifications (before cleanup to avoid data loss on failure)
@@ -144,7 +141,12 @@ class BookMonitor:
             return {'books': [], 'last_updated': datetime.now().isoformat()}
 
         with open(self.schedules_file, 'r', encoding='utf-8') as file:
-            return json.load(file)
+            schedules = json.load(file)
+
+        # IDs are derived from author and title, so files written with an older ID scheme still match.
+        for book in schedules.get('books', []):
+            book['id'] = self.scraper.generate_book_id(book['title'], book['author'])
+        return schedules
 
     def save_release_schedules(self, schedules: Dict) -> None:
         """Save release schedules to JSON file."""
@@ -156,31 +158,6 @@ class BookMonitor:
 
         logger.info(f"Release schedules saved to {self.schedules_file}")
     
-    def find_existing_book(self, book: Dict, existing_schedules: Dict) -> Optional[Dict]:
-        """Find existing book in schedules by ID or title/author match."""
-        
-        existing_books = existing_schedules.get('books', [])
-        
-        # First try to match by ID
-        book_id = book.get('id')
-        if book_id:
-            for existing in existing_books:
-                if existing.get('id') == book_id:
-                    return existing
-        
-        # Fallback to title/author match
-        book_title = book.get('title', '').lower()
-        book_author = book.get('author', '').lower()
-        
-        for existing in existing_books:
-            existing_title = existing.get('title', '').lower()
-            existing_author = existing.get('author', '').lower()
-            
-            if book_title == existing_title and book_author == existing_author:
-                return existing
-        
-        return None
-
     def _find_book_by_id(self, schedules: Dict, book_id: str) -> Optional[Dict]:
         """Find a book in schedules by ID."""
         for book in schedules.get('books', []):
@@ -262,71 +239,26 @@ class BookMonitor:
         # If release_date_obj is None, keep existing status unchanged
 
     def update_release_schedules(self, existing_schedules: Dict, new_books: List[Dict]) -> Dict:
-        """
-        Update release schedules with new book data.
+        """Merge freshly scraped books into the stored schedules, matching on book ID."""
 
-        Uses dictionary-based lookup for O(n) performance instead of nested loops O(n*m).
-        """
+        books_by_id = {
+            book['id']: copy.deepcopy(book) for book in existing_schedules.get('books', [])
+        }
 
-        existing_books = existing_schedules.get('books', [])
-
-        # Create indexes for O(1) lookup:
-        # 1. Index by book ID
-        # 2. Index by (title, author) tuple for fallback matching
-        existing_by_id = {}
-        existing_by_title_author = {}
-
-        for existing in existing_books:
-            book_id = existing.get('id')
-            if book_id:
-                existing_by_id[book_id] = existing
-
-            # Also index by title+author for fallback matching
-            title = existing.get('title', '').lower()
-            author = existing.get('author', '').lower()
-            if title and author:
-                existing_by_title_author[(title, author)] = existing
-
-        # Track which existing books have been matched/updated
-        updated_book_ids = set()
-        final_books = []
-
-        # Process new books: update existing or add as new
         for new_book in new_books:
-            new_id = new_book.get('id')
-            new_title = new_book.get('title', '').lower()
-            new_author = new_book.get('author', '').lower()
-
-            # Try to find matching existing book (by ID first, then title+author)
-            existing = None
-            if new_id and new_id in existing_by_id:
-                existing = existing_by_id[new_id]
-            elif (new_title, new_author) in existing_by_title_author:
-                existing = existing_by_title_author[(new_title, new_author)]
-
+            existing = books_by_id.get(new_book['id'])
             if existing:
-                # Update existing book with new data (use deepcopy to avoid modifying original)
-                updated_book = copy.deepcopy(existing)
-                updated_book.update({
-                    'title': new_book.get('title', existing.get('title')),
-                    'release_date': new_book.get('release_date', existing.get('release_date')),
-                    'source_url': new_book.get('source_url', existing.get('source_url')),
+                existing.update({
+                    'title': new_book['title'],
+                    'release_date': new_book['release_date'],
+                    'source_url': new_book['source_url'],
                     'last_checked': datetime.now().isoformat(),
                     'metadata': {**existing.get('metadata', {}), **new_book.get('metadata', {})}
                 })
-                final_books.append(updated_book)
-                updated_book_ids.add(existing.get('id'))
             else:
-                # Genuinely new book - add it
-                final_books.append(new_book)
+                books_by_id[new_book['id']] = new_book
 
-        # Add existing books that weren't matched with any new books
-        for existing in existing_books:
-            existing_id = existing.get('id')
-            if existing_id not in updated_book_ids:
-                final_books.append(copy.deepcopy(existing))
-
-        # Update status for all books based on release dates
+        final_books = list(books_by_id.values())
         for book in final_books:
             self._update_book_status(book)
 
@@ -334,7 +266,7 @@ class BookMonitor:
             'books': final_books,
             'last_updated': datetime.now().isoformat()
         }
-    
+
     def send_notifications(self, schedules: Dict, new_discoveries: List[Dict], date_changes: List[Dict]):
         """Send appropriate email notifications. Raises if any email fails to send."""
         
@@ -362,19 +294,19 @@ class BookMonitor:
                     new_date=str(change.get('new_date', ''))
                 )
         
-        # 7-day reminders
+        # Release reminders
         reminder_books = []
         for book in books:
             if self.should_send_reminder(book, today):
                 reminder_books.append(book)
         
         if reminder_books:
-            logger.info(f"Sending 7-day reminders for {len(reminder_books)} books")
+            logger.info(f"Sending release reminders for {len(reminder_books)} books")
             self.email_sender.send_release_reminder(reminder_books)
             for book in reminder_books:
                 self._record_notification(schedules, book['id'], 'reminder')
         
-        # Release day notifications
+        # Release alerts
         release_day_books = []
         for book in books:
             if self.should_send_release_day_alert(book, today):
@@ -386,54 +318,40 @@ class BookMonitor:
             for book in release_day_books:
                 self._record_notification(schedules, book['id'], 'release_day')
     
-    def _seen_recently(self, book: Dict, today: date) -> bool:
-        """Whether the source still listed this book within STALE_AFTER of today."""
+    def _still_listed(self, book: Dict, today: date, release_date: date) -> bool:
+        """Whether the source listed this book within STALE_AFTER of today, or of its release if that has passed."""
         last_seen = self._parse_date_field(book.get('last_checked'))
-        return last_seen is not None and today - last_seen <= STALE_AFTER
+        return last_seen is not None and min(today, release_date) - last_seen <= STALE_AFTER
+
+    def _notified_since(self, book: Dict, since: date, notification_type: Optional[str] = None) -> bool:
+        """Whether a notification (of the given type, or any type) was sent for this book on or after a date."""
+        for notification in book.get('notifications_sent', []):
+            sent = self._parse_date_field(notification.get('date'))
+            if sent and sent >= since and notification_type in (None, notification.get('type')):
+                return True
+        return False
 
     def should_send_reminder(self, book: Dict, today: date) -> bool:
-        """Check if 7-day reminder should be sent for book."""
-
-        release_date = book.get('release_date')
-        release_date_obj = self._parse_date_field(release_date)
-
-        if not release_date_obj or not self._seen_recently(book, today):
+        """
+        A reminder is due during the week before release, unless an email about the book
+        (discovery, date change or reminder) already went out within that week.
+        """
+        release_date = self._parse_date_field(book.get('release_date'))
+        if not release_date or not self._still_listed(book, today, release_date):
             return False
 
-        # Check if 7 days before release
-        reminder_date = release_date_obj - timedelta(days=7)
-        if today != reminder_date:
-            return False
+        window_start = release_date - REMINDER_WINDOW
+        return window_start <= today < release_date and not self._notified_since(book, window_start)
 
-        # Check if reminder already sent
-        notifications = book.get('notifications_sent', [])
-        for notification in notifications:
-            if notification.get('type') == 'reminder':
-                return False
-
-        return True
-    
     def should_send_release_day_alert(self, book: Dict, today: date) -> bool:
-        """Check if release day alert should be sent for book."""
-
-        release_date = book.get('release_date')
-        release_date_obj = self._parse_date_field(release_date)
-
-        if not release_date_obj or not self._seen_recently(book, today):
+        """A release alert is due from release day until RELEASE_ALERT_WINDOW later, once per release date."""
+        release_date = self._parse_date_field(book.get('release_date'))
+        if not release_date or not self._still_listed(book, today, release_date):
             return False
 
-        # Check if it's release day
-        if today != release_date_obj:
-            return False
+        in_window = release_date <= today <= release_date + RELEASE_ALERT_WINDOW
+        return in_window and not self._notified_since(book, release_date, 'release_day')
 
-        # Check if release day alert already sent
-        notifications = book.get('notifications_sent', [])
-        for notification in notifications:
-            if notification.get('type') == 'release_day':
-                return False
-
-        return True
-    
     def cleanup_old_releases(self, schedules: Dict):
         """Remove books released more than 6 months ago."""
 
