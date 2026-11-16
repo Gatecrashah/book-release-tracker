@@ -66,8 +66,10 @@ Required for local testing and production:
 - `EMAIL_TO`: Recipient email address
 
 ### GitHub Actions Integration
-- Daily schedule (9:00 AM UTC)
-- Automatically commits changes to `release_schedules.json`
+- Daily schedule (9:00 AM UTC), plus every push to `main` that touches code, tests or dependencies
+- Runs the tests first; monitoring does not run if they fail
+- One run at a time (`concurrency`), so overlapping runs cannot send the same email twice
+- Automatically commits changes to `release_schedules.json`, also after a failed run
 - Uses GitHub Secrets for API keys
 
 ### Author Configuration

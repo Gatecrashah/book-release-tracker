@@ -104,7 +104,8 @@ Release Date: December 9, 2025
 ### GitHub Actions Workflow
 - **Schedule**: Daily at 9:00 AM UTC
 - **Triggers**: Manual trigger + code changes
-- **Actions**: 
+- **Actions**:
+  1. Run the test suite
   1. Scrape author pages for new releases
   2. Detect changes and new discoveries
   3. Send email notifications

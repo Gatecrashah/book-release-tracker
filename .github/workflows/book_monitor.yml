@@ -11,13 +11,21 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'book_monitor.py'
+      - '*.py'
       - 'authors.yaml'
       - 'scrapers/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
       - '.github/workflows/book_monitor.yml'
 
 permissions:
   contents: write
+
+# One run at a time: overlapping runs would send the same emails twice.
+concurrency:
+  group: book-monitor
+  cancel-in-progress: false
 
 jobs:
   monitor-releases:
@@ -26,9 +34,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        # Fetch full history to maintain release_schedules.json
-        fetch-depth: 0
     
     - name: Install uv
       uses: astral-sh/setup-uv@v4
@@ -41,6 +46,9 @@ jobs:
     - name: Install dependencies
       run: uv sync
         
+    - name: Run tests
+      run: uv run pytest -q
+
     - name: Run book release monitoring
       env:
         RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -49,11 +57,13 @@ jobs:
         uv run python book_monitor.py
         
     - name: Commit updated release schedules
+      # Runs even when monitoring failed: a scrape failure still saves the other authors' state.
+      if: always()
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add release_schedules.json
-        git diff --staged --quiet || (git commit -m "📚 Update release schedules - $(date -u +"%Y-%m-%d %H:%M UTC")" && git push)
+        git diff --staged --quiet || (git commit -m "📚 Update release schedules - $(date -u +"%Y-%m-%d %H:%M UTC")" && git pull --rebase && git push)
         
     - name: Upload monitoring logs
       if: always()
