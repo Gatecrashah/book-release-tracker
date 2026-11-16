@@ -28,39 +28,40 @@ class BookNotificationScraper(BaseBookScraper):
             
         Returns:
             List of book dictionaries with release information
+
+        Raises:
+            requests.RequestException: if the author page cannot be fetched
+            ValueError: if the config has no ID, or the page is not recognised
         """
         author_id = author_config.get('book_notification_id')
         author_name = author_config.get('name')
-        
+
         if not author_id:
-            logger.error(f"No book_notification_id provided for {author_name}")
-            return []
-        
-        # Construct author URL
+            raise ValueError(f"No book_notification_id provided for {author_name}")
+
         author_url = f"{self.base_url}/authors/{author_id}"
-        
-        try:
-            soup = self.scrape_page(author_url)
-            if not soup:
-                logger.error(f"Failed to scrape author page: {author_url}")
-                return []
-            
-            # Look for FAQ sections with upcoming book information
-            books = []
-            
-            # Look for FAQ patterns with upcoming book information
-            self._extract_single_book_pattern(soup, books, author_name, author_url)
-            self._extract_multiple_books_pattern(soup, books, author_name, author_url)
-            
-            # Filter for future releases only
-            future_books = [book for book in books if self._is_future_date(book.get('release_date'))]
-            
-            return future_books
-            
-        except Exception as e:
-            logger.error(f"Error scraping releases for {author_name}: {e}")
-            return []
-    
+        soup = self.scrape_page(author_url)
+
+        books = []
+        self._extract_single_book_pattern(soup, books, author_name, author_url)
+        self._extract_multiple_books_pattern(soup, books, author_name, author_url)
+
+        if not books:
+            self._require_no_upcoming_books(soup, author_url)
+
+        return [book for book in books if self._is_future_date(book.get('release_date'))]
+
+    def _require_no_upcoming_books(self, soup, author_url: str) -> None:
+        """Raise unless the page positively looks like an author page with nothing upcoming."""
+        text = ' '.join(soup.get_text(' ').split())
+
+        if 'Upcoming Books' not in text:
+            raise ValueError(f"Page not recognised, no 'Upcoming Books' section: {author_url}")
+
+        has_faq = 'Are there upcoming new books by' in text
+        if has_faq and 'does not have any upcoming books' not in text:
+            raise ValueError(f"Upcoming-books FAQ answer could not be parsed: {author_url}")
+
     def _extract_single_book_pattern(self, soup, books: List[Dict], author_name: str, author_url: str):
         """Extract single book pattern: 'Author has a new book coming out on DATE called TITLE'"""
         

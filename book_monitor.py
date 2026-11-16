@@ -49,12 +49,18 @@ class BookMonitor:
             
             # Scrape all authors for new releases
             all_discovered_books = []
+            scrape_failures = []
             for author in authors:
                 if author.get('status') != 'active':
                     continue
 
                 logger.info(f"Scraping releases for {author['name']}")
-                books = self.scraper.scrape_author_releases(author)
+                try:
+                    books = self.scraper.scrape_author_releases(author)
+                except Exception as e:
+                    logger.error(f"Scraping failed for {author['name']}: {e}")
+                    scrape_failures.append(f"{author['name']}: {e}")
+                    continue
                 all_discovered_books.extend(books)
 
             # Process discovered books (only if any were found)
@@ -95,7 +101,10 @@ class BookMonitor:
 
             # Save updated schedules
             self.save_release_schedules(updated_schedules)
-            
+
+            if scrape_failures:
+                raise RuntimeError("Scraping failed for " + "; ".join(scrape_failures))
+
             logger.info("Monitoring cycle completed successfully")
             return True
             
@@ -130,33 +139,22 @@ class BookMonitor:
     def load_release_schedules(self) -> Dict:
         """Load existing release schedules from JSON file."""
         
-        try:
-            if not os.path.exists(self.schedules_file):
-                logger.info(f"Schedules file not found, starting fresh: {self.schedules_file}")
-                return {'books': [], 'last_updated': datetime.now().isoformat()}
-            
-            with open(self.schedules_file, 'r', encoding='utf-8') as file:
-                return json.load(file)
-                
-        except Exception as e:
-            logger.error(f"Error loading release schedules: {e}")
+        if not os.path.exists(self.schedules_file):
+            logger.info(f"Schedules file not found, starting fresh: {self.schedules_file}")
             return {'books': [], 'last_updated': datetime.now().isoformat()}
-    
-    def save_release_schedules(self, schedules: Dict) -> bool:
+
+        with open(self.schedules_file, 'r', encoding='utf-8') as file:
+            return json.load(file)
+
+    def save_release_schedules(self, schedules: Dict) -> None:
         """Save release schedules to JSON file."""
-        
-        try:
-            schedules['last_updated'] = datetime.now().isoformat()
-            
-            with open(self.schedules_file, 'w', encoding='utf-8') as file:
-                json.dump(schedules, file, indent=2, default=str)
-                
-            logger.info(f"Release schedules saved to {self.schedules_file}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Error saving release schedules: {e}")
-            return False
+
+        schedules['last_updated'] = datetime.now().isoformat()
+
+        with open(self.schedules_file, 'w', encoding='utf-8') as file:
+            json.dump(schedules, file, indent=2, default=str)
+
+        logger.info(f"Release schedules saved to {self.schedules_file}")
     
     def find_existing_book(self, book: Dict, existing_schedules: Dict) -> Optional[Dict]:
         """Find existing book in schedules by ID or title/author match."""
@@ -338,7 +336,7 @@ class BookMonitor:
         }
     
     def send_notifications(self, schedules: Dict, new_discoveries: List[Dict], date_changes: List[Dict]):
-        """Send appropriate email notifications."""
+        """Send appropriate email notifications. Raises if any email fails to send."""
         
         books = schedules.get('books', [])
         today = date.today()
@@ -346,32 +344,23 @@ class BookMonitor:
         # New discovery notifications
         if new_discoveries:
             logger.info(f"Sending discovery notifications for {len(new_discoveries)} books")
-            success = self.email_sender.send_book_discovery_alert(new_discoveries)
-            if success:
-                logger.info(f"Successfully sent discovery notifications")
-                # Mark notifications as sent
-                for book in new_discoveries:
-                    self._record_notification(schedules, book['id'], 'discovery')
-            else:
-                logger.error(f"Failed to send discovery notifications for {len(new_discoveries)} books")
+            self.email_sender.send_book_discovery_alert(new_discoveries)
+            for book in new_discoveries:
+                self._record_notification(schedules, book['id'], 'discovery')
         
         # Date change notifications (treat as new discovery)
         if date_changes:
             changed_books = [change['book'] for change in date_changes]
             logger.info(f"Sending date change notifications for {len(changed_books)} books")
-            success = self.email_sender.send_book_discovery_alert(changed_books)
-            if success:
-                logger.info(f"Successfully sent date change notifications")
-                for change in date_changes:
-                    self._record_notification(
-                        schedules,
-                        change['book']['id'],
-                        'date_change',
-                        old_date=str(change.get('old_date', '')),
-                        new_date=str(change.get('new_date', ''))
-                    )
-            else:
-                logger.error(f"Failed to send date change notifications for {len(changed_books)} books")
+            self.email_sender.send_book_discovery_alert(changed_books)
+            for change in date_changes:
+                self._record_notification(
+                    schedules,
+                    change['book']['id'],
+                    'date_change',
+                    old_date=str(change.get('old_date', '')),
+                    new_date=str(change.get('new_date', ''))
+                )
         
         # 7-day reminders
         reminder_books = []
@@ -381,13 +370,9 @@ class BookMonitor:
         
         if reminder_books:
             logger.info(f"Sending 7-day reminders for {len(reminder_books)} books")
-            success = self.email_sender.send_release_reminder(reminder_books)
-            if success:
-                logger.info(f"Successfully sent 7-day reminder notifications")
-                for book in reminder_books:
-                    self._record_notification(schedules, book['id'], 'reminder')
-            else:
-                logger.error(f"Failed to send 7-day reminder notifications for {len(reminder_books)} books")
+            self.email_sender.send_release_reminder(reminder_books)
+            for book in reminder_books:
+                self._record_notification(schedules, book['id'], 'reminder')
         
         # Release day notifications
         release_day_books = []
@@ -397,13 +382,9 @@ class BookMonitor:
         
         if release_day_books:
             logger.info(f"Sending release day alerts for {len(release_day_books)} books")
-            success = self.email_sender.send_release_day_alert(release_day_books)
-            if success:
-                logger.info(f"Successfully sent release day notifications")
-                for book in release_day_books:
-                    self._record_notification(schedules, book['id'], 'release_day')
-            else:
-                logger.error(f"Failed to send release day notifications for {len(release_day_books)} books")
+            self.email_sender.send_release_day_alert(release_day_books)
+            for book in release_day_books:
+                self._record_notification(schedules, book['id'], 'release_day')
     
     def _seen_recently(self, book: Dict, today: date) -> bool:
         """Whether the source still listed this book within STALE_AFTER of today."""

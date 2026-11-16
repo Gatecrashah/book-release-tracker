@@ -165,29 +165,23 @@ class BaseBookScraper(ABC):
             
         return normalized
     
-    def scrape_page(self, url: str, timeout: int = 30) -> Optional[BeautifulSoup]:
+    def scrape_page(self, url: str, timeout: int = 30) -> BeautifulSoup:
         """
         Scrape a web page and return BeautifulSoup object.
-        
+
         Args:
             url: URL to scrape
             timeout: Request timeout in seconds
-            
-        Returns:
-            BeautifulSoup object or None if scraping fails
+
+        Raises:
+            requests.RequestException: if the page cannot be fetched
         """
-        try:
-            logger.info(f"Scraping page: {url}")
-            
-            response = self.session.get(url, timeout=timeout)
-            response.raise_for_status()
-            
-            soup = BeautifulSoup(response.content, 'html.parser')
-            return soup
-            
-        except Exception as e:
-            logger.error(f"Error scraping page {url}: {e}")
-            return None
+        logger.info(f"Scraping page: {url}")
+
+        response = self.session.get(url, timeout=timeout)
+        response.raise_for_status()
+
+        return BeautifulSoup(response.content, 'html.parser')
     
     def clean_text(self, text: str) -> str:
         """Clean and normalize text."""
