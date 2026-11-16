@@ -19,6 +19,10 @@ from email_sender import EmailSender
 
 logger = logging.getLogger(__name__)
 
+# A book the source stopped listing this long ago is treated as withdrawn or renamed.
+# The window absorbs a few failed scrapes and the source dropping a book on release day.
+STALE_AFTER = timedelta(days=3)
+
 class BookMonitor:
     """Main book release monitoring coordinator."""
     
@@ -322,10 +326,7 @@ class BookMonitor:
         for existing in existing_books:
             existing_id = existing.get('id')
             if existing_id not in updated_book_ids:
-                # Keep existing book even if not found in new scrape (use deepcopy to avoid mutation)
-                existing_copy = copy.deepcopy(existing)
-                existing_copy['last_checked'] = datetime.now().isoformat()
-                final_books.append(existing_copy)
+                final_books.append(copy.deepcopy(existing))
 
         # Update status for all books based on release dates
         for book in final_books:
@@ -404,13 +405,18 @@ class BookMonitor:
             else:
                 logger.error(f"Failed to send release day notifications for {len(release_day_books)} books")
     
+    def _seen_recently(self, book: Dict, today: date) -> bool:
+        """Whether the source still listed this book within STALE_AFTER of today."""
+        last_seen = self._parse_date_field(book.get('last_checked'))
+        return last_seen is not None and today - last_seen <= STALE_AFTER
+
     def should_send_reminder(self, book: Dict, today: date) -> bool:
         """Check if 7-day reminder should be sent for book."""
 
         release_date = book.get('release_date')
         release_date_obj = self._parse_date_field(release_date)
 
-        if not release_date_obj:
+        if not release_date_obj or not self._seen_recently(book, today):
             return False
 
         # Check if 7 days before release
@@ -432,7 +438,7 @@ class BookMonitor:
         release_date = book.get('release_date')
         release_date_obj = self._parse_date_field(release_date)
 
-        if not release_date_obj:
+        if not release_date_obj or not self._seen_recently(book, today):
             return False
 
         # Check if it's release day
