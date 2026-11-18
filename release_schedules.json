@@ -7,7 +7,7 @@
       "release_date": "2027-10-05",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2026-06-14T11:30:54.265957",
-      "last_checked": "2026-11-17T18:12:54.266584",
+      "last_checked": "2026-11-18T17:50:29.708710",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -34,7 +34,7 @@
       "release_date": "2027-03-23",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-07-28T11:17:28.984119",
-      "last_checked": "2026-11-17T18:12:54.266587",
+      "last_checked": "2026-11-18T17:50:29.708715",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -49,7 +49,7 @@
       "release_date": "2027-04-13",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-08-21T09:36:39.184420",
-      "last_checked": "2026-11-17T18:12:54.266588",
+      "last_checked": "2026-11-18T17:50:29.708717",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -64,7 +64,7 @@
       "release_date": "2027-05-25",
       "source_url": "https://www.booknotification.com/authors/michael-connelly",
       "discovery_date": "2026-10-16T13:46:43.712670",
-      "last_checked": "2026-11-17T18:12:54.266589",
+      "last_checked": "2026-11-18T17:50:29.708720",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -263,5 +263,5 @@
       ]
     }
   ],
-  "last_updated": "2026-11-17T18:12:54.266652"
+  "last_updated": "2026-11-18T17:50:29.708839"
 }
