@@ -4,6 +4,7 @@ from datetime import date
 from pathlib import Path
 
 import pytest
+import requests
 from bs4 import BeautifulSoup
 
 from scrapers import BookNotificationScraper
@@ -90,3 +91,22 @@ def test_book_id_is_full_author_and_title_without_the_date():
     scraper = BookNotificationScraper()
     assert scraper.generate_book_id("The Way of Kings", "A B") != scraper.generate_book_id("The Way of Shadows", "A B")
     assert scraper.generate_book_id("Mr. Mercedes!", "James S. A. Corey") == "james_s_a_corey_mr_mercedes"
+
+
+def fetch_landing_on(final_url: str, monkeypatch):
+    """Fetch an author page whose HTTP redirects end at final_url, serving a real author page there."""
+    response = requests.Response()
+    response.status_code = 200
+    response.url = final_url
+    response._content = (FIXTURES / "lee-child.html").read_bytes()
+    scraper = BookNotificationScraper()
+    monkeypatch.setattr(scraper.session, "get", lambda url, timeout: response)
+    return scraper.scrape_page("https://www.booknotification.com/authors/lee-child")
+
+
+def test_redirect_away_from_author_page_raises(monkeypatch):
+    with pytest.raises(ValueError):
+        fetch_landing_on("https://www.booknotification.com/browser-update.html", monkeypatch)
+
+    soup = fetch_landing_on("https://www.booknotification.com/authors/lee-child/", monkeypatch)
+    assert "Are there upcoming new books by Lee Child?" in [h3.get_text() for h3 in soup.find_all("h3")]

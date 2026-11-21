@@ -39,7 +39,6 @@ class BookNotificationScraper:
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.9',
         })
@@ -75,11 +74,19 @@ class BookNotificationScraper:
         return books
 
     def scrape_page(self, url: str, timeout: int = 30) -> BeautifulSoup:
-        """Fetch a page, raising requests.RequestException if it cannot be fetched."""
+        """
+        Fetch a page.
+
+        Raises:
+            requests.RequestException: if the page cannot be fetched
+            ValueError: if the site redirected somewhere other than the page itself
+        """
         logger.info(f"Scraping page: {url}")
 
         response = self.session.get(url, timeout=timeout)
         response.raise_for_status()
+        if response.url.rstrip('/') != url.rstrip('/'):
+            raise ValueError(f"Redirected to {response.url}: {url}")
 
         return BeautifulSoup(response.content, 'html.parser')
 
