@@ -4,10 +4,10 @@
       "id": "jack_carr_state_of_exile",
       "title": "State of Exile",
       "author": "Jack Carr",
-      "release_date": "2027-10-05",
+      "release_date": "2027-10-19",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2026-06-14T11:30:54.265957",
-      "last_checked": "2026-11-20T17:35:03.943698",
+      "last_checked": "2026-11-21T19:12:17.247584",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -24,6 +24,12 @@
           "date": "2026-11-03T16:51:22.134985",
           "old_date": "2027-10-01",
           "new_date": "2027-10-05"
+        },
+        {
+          "type": "date_change",
+          "date": "2026-11-21T19:12:17.457819",
+          "old_date": "2027-10-05",
+          "new_date": "2027-10-19"
         }
       ]
     },
@@ -34,7 +40,7 @@
       "release_date": "2027-03-23",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-07-28T11:17:28.984119",
-      "last_checked": "2026-11-20T17:35:03.943704",
+      "last_checked": "2026-11-21T19:12:17.247587",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -49,7 +55,7 @@
       "release_date": "2027-04-13",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-08-21T09:36:39.184420",
-      "last_checked": "2026-11-20T17:35:03.943707",
+      "last_checked": "2026-11-21T19:12:17.247589",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -64,7 +70,7 @@
       "release_date": "2027-05-25",
       "source_url": "https://www.booknotification.com/authors/michael-connelly",
       "discovery_date": "2026-10-16T13:46:43.712670",
-      "last_checked": "2026-11-20T17:35:03.943712",
+      "last_checked": "2026-11-21T19:12:17.247590",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -263,5 +269,5 @@
       ]
     }
   ],
-  "last_updated": "2026-11-21T16:37:53.386219"
+  "last_updated": "2026-11-21T19:12:17.457944"
 }
