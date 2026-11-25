@@ -7,7 +7,7 @@
       "release_date": "2027-10-19",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2026-06-14T11:30:54.265957",
-      "last_checked": "2026-11-24T19:59:23.624945",
+      "last_checked": "2026-11-25T18:59:27.064160",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -40,7 +40,7 @@
       "release_date": "2027-03-23",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-07-28T11:17:28.984119",
-      "last_checked": "2026-11-24T19:59:23.624948",
+      "last_checked": "2026-11-25T18:59:27.064165",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -55,7 +55,7 @@
       "release_date": "2027-04-13",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-08-21T09:36:39.184420",
-      "last_checked": "2026-11-24T19:59:23.624949",
+      "last_checked": "2026-11-25T18:59:27.064167",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -70,7 +70,7 @@
       "release_date": "2027-05-25",
       "source_url": "https://www.booknotification.com/authors/michael-connelly",
       "discovery_date": "2026-10-16T13:46:43.712670",
-      "last_checked": "2026-11-24T19:59:23.624950",
+      "last_checked": "2026-11-25T18:59:27.064169",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -267,7 +267,22 @@
           "date": "2026-06-16T13:27:49.939108"
         }
       ]
+    },
+    {
+      "id": "jack_carr_targeted_pan_am_103",
+      "title": "Targeted: Pan Am 103",
+      "author": "Jack Carr",
+      "release_date": "2027-04-13",
+      "source_url": "https://www.booknotification.com/authors/jack-carr",
+      "discovery_date": "2026-11-25T18:59:24.669141",
+      "last_checked": "2026-11-25T18:59:24.669144",
+      "notifications_sent": [
+        {
+          "type": "discovery",
+          "date": "2026-11-25T18:59:27.278022"
+        }
+      ]
     }
   ],
-  "last_updated": "2026-11-24T19:59:23.625005"
+  "last_updated": "2026-11-25T18:59:27.278123"
 }
