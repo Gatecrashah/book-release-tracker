@@ -7,7 +7,7 @@
       "release_date": "2027-10-19",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2026-06-14T11:30:54.265957",
-      "last_checked": "2026-11-26T18:51:10.119078",
+      "last_checked": "2026-11-27T18:42:55.984096",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -40,7 +40,7 @@
       "release_date": "2027-03-23",
       "source_url": "https://www.booknotification.com/authors/lee-child",
       "discovery_date": "2026-07-28T11:17:28.984119",
-      "last_checked": "2026-11-26T18:51:10.119080",
+      "last_checked": "2026-11-27T18:42:55.984098",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -55,7 +55,7 @@
       "release_date": "2027-04-13",
       "source_url": "https://www.booknotification.com/authors/david-baldacci",
       "discovery_date": "2026-08-21T09:36:39.184420",
-      "last_checked": "2026-11-26T18:51:10.119081",
+      "last_checked": "2026-11-27T18:42:55.984099",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -67,14 +67,20 @@
       "id": "michael_connelly_daybreak",
       "title": "Daybreak",
       "author": "Michael Connelly",
-      "release_date": "2027-05-25",
+      "release_date": "2027-05-04",
       "source_url": "https://www.booknotification.com/authors/michael-connelly",
       "discovery_date": "2026-10-16T13:46:43.712670",
-      "last_checked": "2026-11-26T18:51:10.119082",
+      "last_checked": "2026-11-27T18:42:55.984101",
       "notifications_sent": [
         {
           "type": "discovery",
           "date": "2026-10-16T13:46:43.950718"
+        },
+        {
+          "type": "date_change",
+          "date": "2026-11-27T18:42:56.196616",
+          "old_date": "2027-05-25",
+          "new_date": "2027-05-04"
         }
       ]
     },
@@ -275,7 +281,7 @@
       "release_date": "2027-04-13",
       "source_url": "https://www.booknotification.com/authors/jack-carr",
       "discovery_date": "2026-11-25T18:59:24.669141",
-      "last_checked": "2026-11-26T18:51:10.119075",
+      "last_checked": "2026-11-27T18:42:55.984093",
       "notifications_sent": [
         {
           "type": "discovery",
@@ -284,5 +290,5 @@
       ]
     }
   ],
-  "last_updated": "2026-11-26T18:51:10.119138"
+  "last_updated": "2026-11-27T18:42:56.196692"
 }
